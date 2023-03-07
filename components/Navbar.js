@@ -1,7 +1,10 @@
 import Link from 'next/link'
+import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
 const Navbar = () => {
+
+    const router = useRouter();
 
     useEffect(() => {
         window.onclick = function(event) {
@@ -110,28 +113,28 @@ const Navbar = () => {
                         <ul className="navbar-nav ms-auto">
                             <li className="nav-item">
                                 <Link href='/' legacyBehavior>
-                                    <a className="nav-link active">Home</a>
+                                    <a className={router.pathname == '/' ? "nav-link active" : "nav-link"}>Home</a>
                                 </Link>
                             </li>
                             <li className="nav-item">
                                 <Link href='/shop' legacyBehavior>
-                                    <a className="nav-link">Shop</a>
+                                    <a className={router.pathname == "/shop" || router.pathname == "/shop/clothing" || router.pathname == "/shop/accessories" || router.pathname == "/shop/shoes" || router.pathname == "/shop/jewelries" ? "nav-link active" : "nav-link"}>Shop</a>
                                 </Link>
                             </li>
                             <li className="nav-item dropdown">
                                 <a className="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">Categories&nbsp;</a>    
                                 <div className="dropdown-menu">
                                     <Link href='/shop/clothing' legacyBehavior>
-                                        <a className="dropdown-item">Clothing</a>
+                                        <a className={router.pathname == "/shop/clothing" ? "dropdown-item active" : "dropdown-item"}>Clothing</a>
                                     </Link>
                                     <Link href='/shop/jewelries' legacyBehavior>
-                                        <a className="dropdown-item">Jewelries</a>
+                                        <a className={router.pathname == "/shop/jewelries" ? "dropdown-item active" : "dropdown-item"}>Jewelries</a>
                                     </Link>
                                     <Link href='/shop/shoes' legacyBehavior>
-                                        <a className="dropdown-item">Shoes</a>
+                                        <a className={router.pathname == "/shop/shoes" ? "dropdown-item active" : "dropdown-item"}>Shoes</a>
                                     </Link>
                                     <Link href='/shop/accessories' legacyBehavior>
-                                        <a className="dropdown-item">Accessories</a>
+                                        <a className={router.pathname == "/shop/accessories" ? "dropdown-item active" : "dropdown-item"}>Accessories</a>
                                     </Link>
                                 </div>
                             </li>
@@ -140,7 +143,7 @@ const Navbar = () => {
                             </li>
                             <li className="nav-item">
                                 <Link href='/about' legacyBehavior>
-                                    <a className="nav-link">About</a>
+                                    <a className={router.pathname == '/about' ? "nav-link active" : "nav-link"}>About</a>
                                 </Link>
                             </li>
                         </ul>

@@ -1,23 +1,23 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/router'
 import Navbar from 'components/Navbar';
 import CartBar from '@/components/Cartbar';
 import SearchBar from '@/components/Searchbar';
 import Banner from 'components/banners/ShopBanner'
 import Footer from 'components/Footer';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useState } from 'react'
-import { useSWR } from 'swr';
+import useSWR from 'swr';
 
-const Shop = ({ allProducts }) => {
+const Category = ({ allProducts }) => {
 
     const router = useRouter();
     console.log(router)
-    const [ products, setProduct ] = useState(allProducts)
+    const [ products, setProducts ] = useState(allProducts);
     const [ limit, setLimit ] = useState(6)
     const [ price, setPrice ] = useState({ min: 0, max: 0 })
-    const [ sort, setSort ] = useState('date');
+    const [ sort, setSort ] = useState('date')
 
     const handleMore = async() => {
         setLimit((prev) => prev+3);
@@ -41,14 +41,13 @@ const Shop = ({ allProducts }) => {
             return;
         }
 
-        const { data } = await axios(`http://localhost:3005/products?min=${price.min}&max=${price.max}`);
-        router.push(`?min=${price.min}&max=${price.max}`, undefined, { shallow: true})
-        setProduct(data)
+        const { data } = await axios(`http://localhost:3005/products/category/shoes?min=${price.min}&max=${price.max}`);
+        // console.log(data)
+        router.push(`?min=${price.min}&max=${price.max}`, undefined, { shallow: true })
+        setProducts(data.product)
         return data;
         
     }
-
-    // const { isLoading, error, data } = useSWR('price_filter', fetcher)
 
     return (
         <>
@@ -63,10 +62,10 @@ const Shop = ({ allProducts }) => {
                             <div>
                                 <div className="shop-cartigory">
                                     <h3>Categories</h3>
-                                    <p><Link className="active" href="/shop">All Products</Link></p>
+                                    <p><Link href="/shop">All Products</Link></p>
                                     <p><Link href="/shop/clothing">Clothing</Link></p>
                                     <p><Link href="/shop/jewelries">Jewelries</Link></p>
-                                    <p><Link href="/shop/shoes">Shoes</Link></p>
+                                    <p><Link href="/shop/shoes" className="active">Shoes</Link></p>
                                     <p><Link href="/shop/accessories">Accessories</Link></p>
                                 </div>
                                 <div>
@@ -97,26 +96,26 @@ const Shop = ({ allProducts }) => {
                                 </div>
                             </div>
                             <div className="row gx-4 gy-4">
-                                { products && products.slice(0,limit).map((product, index) => <div className="col-sm-12 col-md-12 col-lg-6 col-xl-4 col-xxl-4" key={index}>
+                                {products && products.slice(0,limit).map((product, index) => <div className="col-sm-12 col-md-12 col-lg-6 col-xl-4 col-xxl-4" key={index}>
                                     <div className="card product-card-grid">
-                                    <div className="position-relative">
-                                        {product.quantity < 1 && <button className="btn btn-danger btn-sm disabled position-absolute" type="button" style={{right: 0}} disabled>sold out</button>}
-                                        <Link href={product.quantity > 0 ? `/product/${product._id}` : "#"}>
-                                        <Image className="img-fluid" src={product.images.split(',')[0]} style={{aspectRatio: '5/4', objectFit: 'cover'}} width={700} height={400} />
-                                        </Link>
-                                    </div>
-                                    <div className="card-body px-0">
-                                        <div className="mb-2">
-                                        <span className="text-success fw-bold text_small">${(product.price*0.8).toFixed(2)}</span>
-                                            <span className="text-danger fw-bold ms-2 text_small">
-                                            <span style={{textDecoration: 'line-through'}}>${product.price}</span>
-                                            </span>
+                                        <div className="position-relative">
+                                            {product.quantity < 1 && <button className="btn btn-danger btn-sm disabled position-absolute" type="button" style={{right: 0}} disabled>sold out</button>}
+                                            <Link href={product.quantity > 0 ? `/product/${product._id}` : "#"}>
+                                            <Image className="img-fluid" src={product.images.split(',')[0]} style={{aspectRatio: '5/4', objectFit: 'cover'}} width={700} height={400} alt={product.title} />
+                                            </Link>
                                         </div>
-                                        <Link className="product-title" href={product.quantity > 0 ? `/product/${product._id}` : "#"}>
-                                            <h5 className="my-0">{product.title.length < 40 ? `${product.title.substring(0, 45)}` : `${product.title.substring(0, 45)}...`}</h5>
-                                        </Link>
-                                        <button className="btn btn-dark mt-3 w-100 btn-special" type="button">Add to Cart</button>
-                                    </div>
+                                        <div className="card-body px-0">
+                                            <div className="mb-2">
+                                            <span className="text-success fw-bold text_small">${(product.price*0.8).toFixed(2)}</span>
+                                                <span className="text-danger fw-bold ms-2 text_small">
+                                                <span style={{textDecoration: 'line-through'}}>${product.price}</span>
+                                                </span>
+                                            </div>
+                                            <Link className="product-title" href={product.quantity > 0 ? `/product/${product._id}` : "#"}>
+                                                <h5 className="my-0">{product.title.length < 40 ? `${product.title.substring(0, 45)}` : `${product.title.substring(0, 45)}...`}</h5>
+                                            </Link>
+                                            <button className="btn btn-dark mt-3 w-100 btn-special" type="button">Add to Cart</button>
+                                        </div>
                                     </div>
                                 </div>)}
                             </div>
@@ -133,7 +132,7 @@ const Shop = ({ allProducts }) => {
 export async function getServerSideProps(context) {
     const { query } = context;
     const { min, max } = query;
-    let queryString = '';
+    let queryString = "";
     const queryRegex = /^([a-zA-Z ]+)$/;
 
     if (min != undefined && max != undefined){
@@ -141,13 +140,16 @@ export async function getServerSideProps(context) {
             queryString = `?min=${min}&max=${max}`;
         }
     }
-
-    console.log(query)
-    const { data } = await axios(`http://localhost:3005/products${queryString}`);
-    
-    return {
-        props: { allProducts: data }
+    const { data } = await axios(`http://localhost:3005/products/category/shoes${queryString}`);
+    if (!data.error){
+        return {
+            props: { allProducts: data.product }
+        }
+    } else {
+        return {
+            props: { allProducts: []}
+        }
     }
 }
 
-export default Shop
+export default Category

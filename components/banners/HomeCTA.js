@@ -6,7 +6,7 @@ const HomeCTA = () => {
         <div className="container d-flex justify-content-center align-items-center h-100">
             <div style={{maxWidth: 600}}>
                 <h1 className="text-white">Smell good, attract your dream partner with a touch of Gabrielle chanel.</h1>
-                <Link className="btn btn-light" role="button" href="/register">sign up now!</Link>
+                <Link className="btn btn-light" role="button" href="/auth/register">sign up now!</Link>
             </div>
         </div>
     </section>

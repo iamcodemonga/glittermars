@@ -74,6 +74,10 @@ small, .text_small {
   border-color: inherit;
 }
 
+textarea:focus {
+  border: none;
+}
+
 .btn-special {
   background-color: #3c0000;
 }
@@ -623,9 +627,30 @@ footer a:hover {
   /*color: white;*/
 }
 
+.special-form textarea {
+  border-color: transparent;
+  /*color: white;*/
+}
+
 .special-form input:focus {
   border-color: transparent;
   background-color: #beb5b1;
   /*color: white;*/
 }
+
+.special-form textarea:focus {
+  border-color: transparent;
+  background-color: #beb5b1;
+  /*color: white;*/
+}
+
+.cart-input:focus {
+  background-color: transparent;
+}
+
+/* .balablue > img {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+} */
 
