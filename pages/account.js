@@ -5,8 +5,25 @@ import SearchBar from '@/components/Searchbar';
 import Link from 'next/link';
 import Image from 'next/image';
 import { bestProducts } from '@/components/JsonData';
+import { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUser } from '@/features/authSlice';
+import { useRouter } from 'next/router';
 
 const Account = () => {
+
+    const dispatch = useDispatch();
+    const auth = useSelector((state) => state.auth)
+    const router = useRouter();
+
+    useEffect(() => {
+        if(!localStorage.getItem('id')) {
+            router.push('/');
+            return;
+        }
+        dispatch(fetchUser())
+    },[])
+
     return (
         <>
             <SearchBar />
@@ -14,12 +31,12 @@ const Account = () => {
             <Navbar />
             <section className="mt-5 pt-5">
                 <div className="container mt-5 pt-5">
-                    <h1 className="mb-3 text-accent">Welcome Emmanuel Ufot,</h1>
-                    <p>eufot30@gmail.com</p>
+                    {auth.loading ? <h1 className="mb-3 text-accent">_ _ _ _ _ _ _ _ _ _ _,</h1> : <h1 className="mb-3 text-accent">{auth.user.fullname},</h1>}
+                    {auth.loading ? <h1 className="mb-3 text-accent">_ _ _ _ _ _ _ _ _ _,</h1> : <p>{auth.user.email}</p>}
                 </div>
             </section>
             <section id="orders" className="pb-5">
-                <div className="container d-none">
+                <div className="container d-non">
                     <h4 className="mb-0 fw-bolder">Your Orders</h4>
                     <div className="row gx-4 gy-4 mt-3">
                         { bestProducts && bestProducts.map((product, index) => <div className="col-sm-12 col-md-12 col-lg-6 col-xl-4 col-xxl-4" key={index}>
@@ -47,7 +64,7 @@ const Account = () => {
                     </div>
                     <p className="text-center mt-4"><button className="btn btn-dark btn-special border-0" type="button">More Orders</button></p>
                 </div>
-                <div className="container">
+                <div className="container d-none">
                     <h4 className="mb-0 fw-bolder">Your Orders</h4>
                     <div className="vh-50 w-100 d-flex justify-content-center align-items-center nothing mt-3 mb-5">
                     <div>

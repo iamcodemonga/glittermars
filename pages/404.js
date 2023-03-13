@@ -1,8 +1,18 @@
 import Link from 'next/link';
 import Navbar from 'components/Navbar';
 import Footer from 'components/Footer';
+import { useState, useEffect } from 'react'
+import { useDispatch } from 'react-redux';
+import { fetchUser } from '@/features/authSlice';
 
 const NotFound = () => {
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchUser())
+  })
+
   return (
     <>
         <Navbar />

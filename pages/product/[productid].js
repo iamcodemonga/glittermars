@@ -6,12 +6,20 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { bestProducts } from 'components/JsonData';
 import axios from 'axios';
-import { useState } from 'react';
-import ReactImageMagnify from 'react-image-magnify';
+import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchUser } from '@/features/authSlice';
+// import ReactImageMagnify from 'react-image-magnify';
 
 const Product = ({ product, recommended }) => {
 
     const [ activeIndex, setActiveIndex ] = useState(0)
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+      dispatch(fetchUser())
+    })
+
     return (
         <>
             <Cartbar />

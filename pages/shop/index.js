@@ -7,17 +7,22 @@ import SearchBar from '@/components/Searchbar';
 import Banner from 'components/banners/ShopBanner'
 import Footer from 'components/Footer';
 import axios from 'axios';
-import { useState } from 'react'
-import { useSWR } from 'swr';
+import { useState, useEffect } from 'react'
+import { useDispatch } from 'react-redux';
+import { fetchUser } from '@/features/authSlice';
 
 const Shop = ({ allProducts }) => {
 
     const router = useRouter();
-    console.log(router)
+    const dispatch = useDispatch();
     const [ products, setProduct ] = useState(allProducts)
     const [ limit, setLimit ] = useState(6)
     const [ price, setPrice ] = useState({ min: 0, max: 0 })
     const [ sort, setSort ] = useState('date');
+
+    useEffect(() => {
+        dispatch(fetchUser())
+    })
 
     const handleMore = async() => {
         setLimit((prev) => prev+3);
@@ -47,8 +52,6 @@ const Shop = ({ allProducts }) => {
         return data;
         
     }
-
-    // const { isLoading, error, data } = useSWR('price_filter', fetcher)
 
     return (
         <>

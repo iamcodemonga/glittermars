@@ -3,11 +3,20 @@ import Image from 'next/image';
 import Navbar from 'components/Navbar';
 import Cartbar from '@/components/Cartbar';
 import Searchbar from '@/components/Searchbar';
-import Banner from 'components/banners/ShopBanner'
 import Footer from 'components/Footer';
 import { bestProducts  } from '@/components/JsonData';
+import { useState, useEffect } from 'react'
+import { useDispatch } from 'react-redux';
+import { fetchUser } from '@/features/authSlice';
 
 const search = () => {
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(fetchUser())
+    })
+
     return (
         <>
             <Searchbar />

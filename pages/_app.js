@@ -1,8 +1,17 @@
 import 'styles/globals.css';
 import Head from 'next/head';
 import Script from 'next/script';
+import { configureStore } from '@reduxjs/toolkit';
+import { Provider } from 'react-redux';
+import authReducer from '../features/authSlice'
 
-export default function App({ Component, pageProps }) {
+const store = configureStore({
+  reducer: {
+    auth: authReducer
+  }
+})
+
+const App = ({ Component, pageProps }) =>  {
   return (
     <>
       <Head>
@@ -14,7 +23,15 @@ export default function App({ Component, pageProps }) {
           <link rel="icon" href="/favicon.ico" />
       </Head>
       <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></Script>
-      <Component {...pageProps} />
+      <Provider store={store}>
+          <Component {...pageProps} />
+      </Provider>
     </>
   )
 }
+
+export default App;
+// const makeStore = () => store;
+// const wrapper = createWrapper(makeStore)
+
+// export default wrapper.withRedux(App)

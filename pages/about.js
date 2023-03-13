@@ -2,8 +2,18 @@ import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 import Cartbar from '@/components/Cartbar';
 import Searchbar from '@/components/Searchbar';
+import { useState, useEffect } from 'react'
+import { useDispatch } from 'react-redux';
+import { fetchUser } from '@/features/authSlice';
 
 const About = () => {
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchUser())
+  })
+
   return (
     <>
         <Searchbar />

@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import BeatLoader from 'react-spinners/BeatLoader';
+import { useDispatch } from 'react-redux';
+import { registerUser } from '@/features/authSlice';
 
 const RegisterForm = () => {
 
@@ -11,14 +13,29 @@ const RegisterForm = () => {
     const [ loading, setLoading ] = useState(false);
     const [ show, setShow ] = useState(false);
     const router = useRouter();
+    const dispatch = useDispatch();
 
     const handleRegister = async(e) => {
         e.preventDefault();
         setLoading(true);
-        const { data } = await axios.post(`http://localhost:3005/auth/register`, user, { withCredentials: true });
-        if (data.error){
+        try {
+            const { data } = await axios.post(`http://localhost:3005/auth/register`, user, { withCredentials: true });
+            if (data.error){
+                setLoading(false);
+                toast.error(data.message, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
+                return;
+            }
             setLoading(false);
-            toast.error(data.message, {
+            toast.success(data.message, {
                 position: "bottom-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -28,23 +45,13 @@ const RegisterForm = () => {
                 progress: undefined,
                 theme: "colored",
             });
-            return;
+            dispatch(registerUser(data.user))
+            setTimeout(() => {
+                router.push('/account');
+            }, 5000);
+        } catch (error) {
+            console.log(error)
         }
-        localStorage.setItem('id', JSON.stringify(data.user._id));
-        setLoading(false);
-        toast.success(data.message, {
-            position: "bottom-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-        });
-        setTimeout(() => {
-            router.push('/');
-        }, 5000);
     }
 
     const handleShow = () => {

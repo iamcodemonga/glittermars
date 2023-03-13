@@ -1,11 +1,13 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 const Navbar = () => {
 
     const router = useRouter();
-
+    const auth = useSelector((state) => state.auth)
+    
     useEffect(() => {
         window.onclick = function(event) {
             let cartbar = document.querySelector('.cart-bar');
@@ -77,15 +79,16 @@ const Navbar = () => {
                     <a data-bs-toggle="tooltip" data-bss-tooltip data-bs-placement="bottom" className="bar-link" href="mailto:codemonha@gmail.com" title="send us mails" target='_blank'>support@glittermars.com</a>
                 </div>
                 <div>
-                    <Link href='/auth/login' legacyBehavior>
-                        <a className="me-3 bar-link">Login</a>
-                    </Link>
-                    <Link href='/auth/register' legacyBehavior>
-                        <a className="me-3 bar-link">Register</a>
-                    </Link>
-                    <Link href='/account' legacyBehavior>
-                        <a className="bar-link">My Account</a>
-                    </Link>
+                    {!auth.loading ?
+                         auth.user ? <Link href='/account' className='bar-link'>Account</Link> :
+                            <>
+                                <Link href='/auth/login' className='me-3 bar-link'>Login</Link>
+                                <Link href='/auth/register' className='bar-link'>Register</Link>
+                            </>
+                         : <>
+                            <span className='me-3 bar-link' disabled>---------------</span>
+                        </>
+                    }
                 </div>
             </div>
             <nav className="navbar navbar-light navbar-expand-lg py-2">

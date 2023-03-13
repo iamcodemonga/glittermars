@@ -9,8 +9,17 @@ import HomeCTA from 'components/banners/HomeCTA';
 import Categories from 'components/datalist/TopCategories';
 import Footer from 'components/Footer';
 import axios from 'axios';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchUser } from '@/features/authSlice';
 
 export default function Home({ latests, bestProducts }) {
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchUser())
+  })
 
   return (
     <>

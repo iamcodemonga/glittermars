@@ -8,15 +8,21 @@ import Banner from 'components/banners/ShopBanner'
 import Footer from 'components/Footer';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import useSWR from 'swr';
+import { useDispatch } from 'react-redux';
+import { fetchUser } from '@/features/authSlice';
 
 const Category = ({ allProducts }) => {
 
     const router = useRouter();
+    const dispatch = useDispatch();
     const [ products, setProducts ] = useState(allProducts);
     const [ limit, setLimit ] = useState(6)
     const [ price, setPrice ] = useState({ min: 0, max: 0 })
     const [ sort, setSort ] = useState('date')
+
+    useEffect(() => {
+        dispatch(fetchUser())
+    })
 
     const handleMore = async() => {
         setLimit((prev) => prev+3);

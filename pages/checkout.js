@@ -3,8 +3,25 @@ import Footer from "@/components/Footer"
 import Navbar from "@/components/Navbar"
 import SearchBar from "@/components/Searchbar"
 import Link from "next/link"
+import { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUser } from '@/features/authSlice';
+import { useRouter } from 'next/router';
 
 const Checkout = () => {
+
+    const dispatch = useDispatch();
+    const auth = useSelector((state) => state.auth)
+    const router = useRouter();
+
+    useEffect(() => {
+        if(!localStorage.getItem('id')) {
+            router.push('/');
+            return;
+        }
+        dispatch(fetchUser())
+    },[])
+
     return (
         <>
             <SearchBar />

@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import BeatLoader from 'react-spinners/BeatLoader';
+import { useDispatch } from 'react-redux';
+import { registerUser } from '@/features/authSlice';
 
 const LoginForm = () => {
 
@@ -11,6 +13,7 @@ const LoginForm = () => {
     const [ loading, setLoading ] = useState(false);
     const [ show, setShow ] = useState(false);
     const router = useRouter();
+    const dispatch = useDispatch();
 
     const handleLogin = async(e) => {
         e.preventDefault();
@@ -31,7 +34,6 @@ const LoginForm = () => {
                 });
                 return;
             }
-            localStorage.setItem('id', JSON.stringify(data.user._id));
             setLoading(false);
             toast.success(data.message, {
                 position: "bottom-right",
@@ -43,8 +45,9 @@ const LoginForm = () => {
                 progress: undefined,
                 theme: "colored",
             });
+            dispatch(registerUser(data.user))
             setTimeout(() => {
-                router.push('/');
+                router.push('/account');
             }, 5000);
         } catch (error) {
             console.log(error)
