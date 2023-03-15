@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUser } from '@/features/authSlice';
 import { useRouter } from 'next/router';
+import { initializeCart } from '@/features/cartSlice';
 
 const Checkout = () => {
 
@@ -20,6 +21,7 @@ const Checkout = () => {
             return;
         }
         dispatch(fetchUser())
+        dispatch(initializeCart())
     },[])
 
     return (

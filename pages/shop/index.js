@@ -10,6 +10,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux';
 import { fetchUser } from '@/features/authSlice';
+import { initializeCart, addToCart } from '@/features/cartSlice';
 
 const Shop = ({ allProducts }) => {
 
@@ -22,7 +23,13 @@ const Shop = ({ allProducts }) => {
 
     useEffect(() => {
         dispatch(fetchUser())
+        dispatch(initializeCart())
     })
+
+    const handleAddToCart = (product) => {
+        dispatch(addToCart(product));
+        return;
+    }
 
     const handleMore = async() => {
         setLimit((prev) => prev+3);
@@ -118,7 +125,7 @@ const Shop = ({ allProducts }) => {
                                         <Link className="product-title" href={product.quantity > 0 ? `/product/${product._id}` : "#"}>
                                             <h5 className="my-0">{product.title.length < 40 ? `${product.title.substring(0, 45)}` : `${product.title.substring(0, 45)}...`}</h5>
                                         </Link>
-                                        <button className="btn btn-dark mt-3 w-100 btn-special" type="button">Add to Cart</button>
+                                        <button className="btn btn-dark mt-3 w-100 btn-special" type="button" onClick={(e) => handleAddToCart(product)}>Add to Cart</button>
                                     </div>
                                     </div>
                                 </div>)}

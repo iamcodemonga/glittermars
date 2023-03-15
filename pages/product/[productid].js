@@ -7,18 +7,56 @@ import Link from 'next/link';
 import { bestProducts } from 'components/JsonData';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { fetchUser } from '@/features/authSlice';
+import { initializeCart, addProduct } from '@/features/cartSlice';
 // import ReactImageMagnify from 'react-image-magnify';
 
 const Product = ({ product, recommended }) => {
 
-    const [ activeIndex, setActiveIndex ] = useState(0)
+
+    const [ activeIndex, setActiveIndex ] = useState(0);
+    // const cart = useSelector((state) => state.cart)
+    const [ cartQuantity, setCartQuantity ] = useState(1)
     const dispatch = useDispatch();
+
+    const handleAdd = () => {
+        if(cartQuantity >= product.quantity){
+            return;
+        }
+        setCartQuantity((prev) => parseInt(prev)+1)
+    }
+
+    const handleRemove = () => {
+        if(cartQuantity <= 1){
+            return;
+        }
+        setCartQuantity((prev) => parseInt(prev)-1)
+    }
+
+    const handleChange = (e) => {
+        if(Math.floor(e.target.value) > product.quantity){
+            setCartQuantity(product.quantity);
+            return;
+        }
+        setCartQuantity(e.target.value)
+    }
+
+    const handleFocusout = () => {
+        if(cartQuantity == 0) {
+            setCartQuantity(1)
+            return;
+        }
+        if(cartQuantity == "") {
+            setCartQuantity(1)
+            return;
+        }
+    }
 
     useEffect(() => {
       dispatch(fetchUser())
-    })
+      dispatch(initializeCart())
+    },[])
 
     return (
         <>
@@ -44,7 +82,7 @@ const Product = ({ product, recommended }) => {
                                     }
                                 }} /> */}
                                 <div className="inactiveImage-wrapper">
-                                    {product.images.split(',').map((image, index) => <Image className={index === activeIndex ? "inactiveImage me-2 active": "inactiveImage me-2"} src={image} width={50} height={40} key={index} priority onMouseOver={() => setActiveIndex(index)} />)}
+                                    {product.images.split(',').map((image, index) => <Image className={index === activeIndex ? "inactiveImage me-2 active": "inactiveImage me-2"} src={image} alt='carousel_image' width={50} height={40} key={index} priority onMouseOver={() => setActiveIndex(index)} />)}
                                 </div>
                             </div>
                         </div>
@@ -61,12 +99,12 @@ const Product = ({ product, recommended }) => {
                                     <div className="mb-3">
                                         <p>Quantity</p>
                                         <div className="input-grou d-flex align-items-center" style={{maxWidth: 200}}>
-                                            <button className="btn btn-danger border-0" type="button">remove</button>
-                                                <input className="form-control cart-input" type="text" defaultValue={1} />
-                                            <button className="btn btn-success border-0 px-4" type="button">add</button>
+                                            <button className="btn btn-danger border-0" type="button" onClick={handleRemove}>remove</button>
+                                                <input className="form-control cart-input" type="text" value={cartQuantity} onChange={handleChange} onBlur={handleFocusout} />
+                                            <button className="btn btn-success border-0 px-4" type="button" onClick={handleAdd}>add</button>
                                         </div>
                                     </div>
-                                    <button className="btn btn-dark btn-lg mt-4 w-100" type="button">ADD TO CART</button>
+                                    <button className="btn btn-dark btn-lg mt-4 w-100" type="button" onClick={() => dispatch(addProduct({cartQuantity, ...product}))}>ADD TO CART</button>
                                     <button className="btn btn-dark btn-lg mt-4 w-100 btn-special" type="button">BUY NOW!</button>
                                 </div>
                             </div>
@@ -95,7 +133,7 @@ const Product = ({ product, recommended }) => {
                                 <div className="position-relative">
                                     {product.quantity < 1 && <button className="btn btn-danger btn-sm disabled position-absolute" type="button" style={{right: 0}} disabled>sold out</button>}
                                     <Link href={product.quantity > 0 ? `/product/${product._id}` : "#"}>
-                                    <Image className="img-fluid" src={product.images.split(',')[0]} style={{aspectRatio: '5/4', objectFit: 'cover'}} width={700} height={500} />
+                                    <Image className="img-fluid" src={product.images.split(',')[0]} style={{aspectRatio: '5/4', objectFit: 'cover'}} width={700} height={500} alt="recommended_image" />
                                     </Link>
                                 </div>
                                 <div className="card-body px-0">
@@ -124,18 +162,31 @@ const Product = ({ product, recommended }) => {
                                     <h2 className='mt-0'>Customer Reviews</h2>
                                     <div className='d-non'>
                                         <form className="review-form">
-                                        <div className="mb-3"><label className="form-label">Name</label><input className="form-control border-0" type="text" placeholder="what's ya name" /></div>
-                                        <div className="mb-3"><label className="form-label">Product Rating</label><select className="form-select py-2">
-                                            <optgroup label="Rate this product">
-                                                <option value={5} selected>5</option>
-                                                <option value={4}>4</option>
-                                                <option value={3}>3</option>
-                                                <option value={2}>2</option>
-                                                <option value={1}>1</option>
-                                            </optgroup>
-                                            </select></div>
-                                        <div className="mb-3"><label className="form-label">Review Title</label><input className="form-control border-0" type="text" placeholder="add a title" /></div>
-                                        <div className="mb-4"><label className="form-label">Body of review</label><textarea className="form-control border-0" placeholder="What do you think?" rows={4} defaultValue={""} /></div><button className="btn btn-dark btn-special border-0" type="button">Submit review</button>
+                                            <div className="mb-3">
+                                                <label className="form-label">Name</label>
+                                                <input className="form-control border-0" type="text" placeholder="what's ya name" value={''} />
+                                            </div>
+                                            <div className="mb-3">
+                                                <label className="form-label">Product Rating</label>
+                                                <select className="form-select py-2" value={5}>
+                                                    <optgroup label="Rate this product">
+                                                        <option value={5}>5</option>
+                                                        <option value={4}>4</option>
+                                                        <option value={3}>3</option>
+                                                        <option value={2}>2</option>
+                                                        <option value={1}>1</option>
+                                                    </optgroup>
+                                                </select>
+                                            </div>
+                                            <div className="mb-3">
+                                                <label className="form-label">Review Title</label>
+                                                <input className="form-control border-0" type="text" placeholder="add a title" value={''} />
+                                            </div>
+                                            <div className="mb-4">
+                                                <label className="form-label">Body of review</label>
+                                                <textarea className="form-control border-0" placeholder="What do you think?" rows={4} value={""} />
+                                            </div>
+                                            <button className="btn btn-dark btn-special border-0" type="submit">Submit review</button>
                                         </form>
                                     </div>
                                     <div className="comment mt-5">

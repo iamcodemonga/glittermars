@@ -12,6 +12,7 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { fetchUser } from '@/features/authSlice';
+import { initializeCart } from '@/features/cartSlice'
 
 export default function Home({ latests, bestProducts }) {
 
@@ -19,6 +20,7 @@ export default function Home({ latests, bestProducts }) {
 
   useEffect(() => {
     dispatch(fetchUser())
+    dispatch(initializeCart())
   })
 
   return (

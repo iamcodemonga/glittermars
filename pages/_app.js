@@ -4,10 +4,14 @@ import Script from 'next/script';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import authReducer from '../features/authSlice'
+import cartReducer from '../features/cartSlice'
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify'
 
 const store = configureStore({
   reducer: {
-    auth: authReducer
+    auth: authReducer,
+    cart: cartReducer
   }
 })
 
@@ -25,6 +29,18 @@ const App = ({ Component, pageProps }) =>  {
       <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></Script>
       <Provider store={store}>
           <Component {...pageProps} />
+          <ToastContainer
+                position="bottom-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+            />
       </Provider>
     </>
   )

@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { useRouter } from 'next/router'
 import React, { useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify'
+// import 'react-toastify/dist/ReactToastify.css';
 import BeatLoader from 'react-spinners/BeatLoader';
 import { useDispatch } from 'react-redux';
 import { registerUser } from '@/features/authSlice';
@@ -82,7 +82,7 @@ const LoginForm = () => {
                     <p className="mt-3 text_small">Click <a href="https://codemonga.bss.design" target="_blank">password</a> if you have forgotten your password!</p>
                 </form>
             </section>
-            <ToastContainer
+            {/* <ToastContainer
                 position="top-right"
                 autoClose={5000}
                 hideProgressBar={false}
@@ -93,7 +93,7 @@ const LoginForm = () => {
                 draggable
                 pauseOnHover
                 theme="colored"
-            />
+            /> */}
         </>
         
     )

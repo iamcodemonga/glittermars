@@ -3,16 +3,22 @@ import Footer from "@/components/Footer"
 import Navbar from "@/components/Navbar"
 import SearchBar from "@/components/Searchbar";
 import Form from "@/components/forms/RegisterForm"
-import { useEffect } from 'react'
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { fetchUser } from '@/features/authSlice';
+import { useRouter } from "next/router"
+import { initializeCart } from "@/features/cartSlice";
 
 const register = () => {
 
+    const router = useRouter();
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(fetchUser())
+        if(localStorage.getItem('id')){
+            router.push('/')
+            return
+        }
+        dispatch(initializeCart())
     })
 
     return (

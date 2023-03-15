@@ -8,13 +8,15 @@ import { bestProducts  } from '@/components/JsonData';
 import { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux';
 import { fetchUser } from '@/features/authSlice';
+import { initializeCart } from '@/features/cartSlice';
 
 const search = () => {
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(fetchUser())
+      dispatch(fetchUser())
+      dispatch(initializeCart())
     })
 
     return (

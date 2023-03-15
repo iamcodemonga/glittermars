@@ -1,9 +1,10 @@
 import Link from 'next/link';
 import Navbar from 'components/Navbar';
 import Footer from 'components/Footer';
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useDispatch } from 'react-redux';
 import { fetchUser } from '@/features/authSlice';
+import { initializeCart } from '@/features/cartSlice';
 
 const NotFound = () => {
 
@@ -11,6 +12,7 @@ const NotFound = () => {
 
   useEffect(() => {
     dispatch(fetchUser())
+    dispatch(initializeCart())
   })
 
   return (

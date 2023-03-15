@@ -33,7 +33,7 @@ export const loginUser = createAsyncThunk('auth/login', async(userInfo) => {
 })
 
 export const logoutUser = createAsyncThunk('auth/logout', async() => {
-    localStorage.clear();
+    localStorage.removeItem('id');
     return null;
 })
 

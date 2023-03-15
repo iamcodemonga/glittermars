@@ -9,6 +9,7 @@ import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUser } from '@/features/authSlice';
 import { useRouter } from 'next/router';
+import { initializeCart } from '@/features/cartSlice';
 
 const Account = () => {
 
@@ -22,6 +23,7 @@ const Account = () => {
             return;
         }
         dispatch(fetchUser())
+        dispatch(initializeCart())
     },[])
 
     return (
@@ -36,7 +38,7 @@ const Account = () => {
                 </div>
             </section>
             <section id="orders" className="pb-5">
-                <div className="container d-non">
+                <div className="container d-none">
                     <h4 className="mb-0 fw-bolder">Your Orders</h4>
                     <div className="row gx-4 gy-4 mt-3">
                         { bestProducts && bestProducts.map((product, index) => <div className="col-sm-12 col-md-12 col-lg-6 col-xl-4 col-xxl-4" key={index}>
@@ -64,7 +66,7 @@ const Account = () => {
                     </div>
                     <p className="text-center mt-4"><button className="btn btn-dark btn-special border-0" type="button">More Orders</button></p>
                 </div>
-                <div className="container d-none">
+                <div className="container d-non">
                     <h4 className="mb-0 fw-bolder">Your Orders</h4>
                     <div className="vh-50 w-100 d-flex justify-content-center align-items-center nothing mt-3 mb-5">
                     <div>

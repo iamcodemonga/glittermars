@@ -1,9 +1,13 @@
 import React, { useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '@/features/cartSlice';
 // import { latests } from 'components/JsonData';
 
 const NewProducts = ({ latests }) => {
+
+    const dispatch = useDispatch();
 
     const handleSlide = () => {
         const productContainers = [...document.querySelectorAll('.product-container')];
@@ -23,6 +27,11 @@ const NewProducts = ({ latests }) => {
                 item.scrollLeft -= containerWidth;
             });
         });
+    }
+
+    const handleAddToCart = (product) => {
+        dispatch(addToCart(product));
+        return;
     }
 
     useEffect(() => {
@@ -55,7 +64,7 @@ const NewProducts = ({ latests }) => {
                             <Link className="product-title" href={`/product/${latest._id}`}>
                                 <h5 className="my-0">{latest.title.length < 30 ? `${latest.title.substring(0, 45)}` : `${latest.title.substring(0, 30)}...`}</h5>
                             </Link>
-                            <button className="btn btn-dark mt-3 w-100 btn-special" type="button">Add to Cart</button>
+                            <button className="btn btn-dark mt-3 w-100 btn-special" type="button" onClick={(e) => handleAddToCart(latest)}>Add to Cart</button>
                         </div>
                     </div>)}
                 </div>

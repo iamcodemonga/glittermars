@@ -1,12 +1,15 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { logoutUser } from '@/features/authSlice';
 
 const Navbar = () => {
 
     const router = useRouter();
+    const dispatch = useDispatch();
     const auth = useSelector((state) => state.auth)
+    const cartQuantity = useSelector((state) => state.cart.quantity);
     
     useEffect(() => {
         window.onclick = function(event) {
@@ -68,6 +71,11 @@ const Navbar = () => {
         }, 300);
     }
 
+    const handleLogout = (e) => {
+        e.preventDefault();
+        dispatch(logoutUser())
+    }
+
   return (
         <header id="topbar" className="fixed-top">
             <div className="w-100 bg-success d-flex justify-content-center align-items-center text-white extra-tops">
@@ -76,11 +84,14 @@ const Navbar = () => {
             <div className="w-100 d-flex justify-content-around align-items-center extra-tops">
                 <div className="d-none d-lg-block">
                     <a data-bs-toggle="tooltip" data-bss-tooltip data-bs-placement="bottom" className="me-3 bar-link" href="tel:07066340180" title="call now" target='_blank'>+2347066340180</a>
-                    <a data-bs-toggle="tooltip" data-bss-tooltip data-bs-placement="bottom" className="bar-link" href="mailto:codemonha@gmail.com" title="send us mails" target='_blank'>support@glittermars.com</a>
+                    <a data-bs-toggle="tooltip" data-bss-tooltip data-bs-placement="bottom" className="bar-link" href="mailto:codemonga@gmail.com" title="send us mails" target='_blank'>support@glittermars.com</a>
                 </div>
                 <div>
                     {!auth.loading ?
-                         auth.user ? <Link href='/account' className='bar-link'>Account</Link> :
+                         auth.user ? <>
+                            <Link href='/account' className='me-3 bar-link'>Account</Link>
+                            <Link href='/' className='bar-link' onClick={handleLogout}>logout</Link>
+                         </> :
                             <>
                                 <Link href='/auth/login' className='me-3 bar-link'>Login</Link>
                                 <Link href='/auth/register' className='bar-link'>Register</Link>
@@ -104,7 +115,7 @@ const Navbar = () => {
                             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" style={{fontSize: 25, color: '#050609'}}>
                                 <path d="M3 3H5L5.4 5M7 13H17L21 5H5.4M7 13L5.4 5M7 13L4.70711 15.2929C4.07714 15.9229 4.52331 17 5.41421 17H17M17 17C15.8954 17 15 17.8954 15 19C15 20.1046 15.8954 21 17 21C18.1046 21 19 20.1046 19 19C19 17.8954 18.1046 17 17 17ZM9 19C9 20.1046 8.10457 21 7 21C5.89543 21 5 20.1046 5 19C5 17.8954 5.89543 17 7 17C8.10457 17 9 17.8954 9 19Z" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
-                            <span className="badge rounded-pill bg-success position-absolute cartbadge">3</span>
+                            <span className="badge rounded-pill bg-success position-absolute cartbadge">{cartQuantity}</span>
                         </button>
                         <button data-bs-toggle="collapse" className="navbar-toggler border-0 shadow-none" data-bs-target="#navcol-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none">
@@ -165,7 +176,7 @@ const Navbar = () => {
                                             <path d="M10 22C11.1046 22 12 21.1046 12 20C12 18.8954 11.1046 18 10 18C8.89543 18 8 18.8954 8 20C8 21.1046 8.89543 22 10 22Z" fill="currentColor" />
                                             <path d="M19 20C19 21.1046 18.1046 22 17 22C15.8954 22 15 21.1046 15 20C15 18.8954 15.8954 18 17 18C18.1046 18 19 18.8954 19 20Z" fill="currentColor" />
                                         </svg>Cart
-                                        <span className="badge rounded-pill bg-success ms-1">3</span>
+                                        <span className="badge rounded-pill bg-success ms-1">{cartQuantity}</span>
                                 </Link>
                             </li>
                         </ul>
