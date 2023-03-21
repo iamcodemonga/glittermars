@@ -9,10 +9,9 @@ import Footer from 'components/Footer';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { fetchUser } from '@/features/authSlice';
 import { initializeCart, addToCart } from '@/features/cartSlice';
 
-const Category = ({ allProducts }) => {
+const Category = ({ allProducts, user }) => {
 
     const router = useRouter();
     const dispatch = useDispatch();
@@ -22,7 +21,6 @@ const Category = ({ allProducts }) => {
     const [ sort, setSort ] = useState('date')
 
     useEffect(() => {
-        dispatch(fetchUser())
         dispatch(initializeCart())
     })
 
@@ -65,7 +63,7 @@ const Category = ({ allProducts }) => {
         <>
             <SearchBar />
             <CartBar />
-            <Navbar />
+            <Navbar user={user} />
             <Banner />
             <section className="py-5">
                 <div className="container">
@@ -142,9 +140,10 @@ const Category = ({ allProducts }) => {
 }
 
 export async function getServerSideProps(context) {
-    const { query } = context;
+    const { req, query } = context;
+    const { cookie } = req.headers;
     const { min, max } = query;
-    let queryString = "";
+    let queryString = '';
     const queryRegex = /^([a-zA-Z ]+)$/;
 
     if (min != undefined && max != undefined){
@@ -152,16 +151,23 @@ export async function getServerSideProps(context) {
             queryString = `?min=${min}&max=${max}`;
         }
     }
-    const { data } = await axios(`http://localhost:3005/products/category/jewelries${queryString}`);
-    if (!data.error){
-        return {
-            props: { allProducts: data.product }
+
+    try {
+        const { data } = await axios(`http://localhost:3005/products/category/jewelries${queryString}`);
+        const user = await axios("http://localhost:3005/user/", { headers: { cookie: cookie || '' } } );
+        if (!data.error){
+            return {
+                props: { allProducts: data.product, user: user.data }
+            }
+        } else {
+            return {
+                props: { allProducts: [], user: user.data }
+            }
         }
-    } else {
-        return {
-            props: { allProducts: []}
-        }
+    } catch (error) {
+        console.log(error)
     }
+    
 }
 
 export default Category

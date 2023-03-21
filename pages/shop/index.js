@@ -9,10 +9,9 @@ import Footer from 'components/Footer';
 import axios from 'axios';
 import { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux';
-import { fetchUser } from '@/features/authSlice';
 import { initializeCart, addToCart } from '@/features/cartSlice';
 
-const Shop = ({ allProducts }) => {
+const Shop = ({ allProducts, user }) => {
 
     const router = useRouter();
     const dispatch = useDispatch();
@@ -22,7 +21,6 @@ const Shop = ({ allProducts }) => {
     const [ sort, setSort ] = useState('date');
 
     useEffect(() => {
-        dispatch(fetchUser())
         dispatch(initializeCart())
     })
 
@@ -64,7 +62,7 @@ const Shop = ({ allProducts }) => {
         <>
             <SearchBar />
             <CartBar />
-            <Navbar />
+            <Navbar user={user} />
             <Banner />
             <section className="py-5">
                 <div className="container">
@@ -141,7 +139,8 @@ const Shop = ({ allProducts }) => {
 }
 
 export async function getServerSideProps(context) {
-    const { query } = context;
+    const { req, query } = context;
+    const { cookie } = req.headers;
     const { min, max } = query;
     let queryString = '';
     const queryRegex = /^([a-zA-Z ]+)$/;
@@ -152,12 +151,16 @@ export async function getServerSideProps(context) {
         }
     }
 
-    console.log(query)
-    const { data } = await axios(`http://localhost:3005/products${queryString}`);
-    
-    return {
-        props: { allProducts: data }
+    try {
+        const { data } = await axios(`http://localhost:3005/products${queryString}`);
+        const user = await axios("http://localhost:3005/user/", { headers: { cookie: cookie || '' } } );
+        return {
+            props: { allProducts: data, user: user.data }
+        }
+    } catch (error) {
+        console.log(error)
     }
+    
 }
 
 export default Shop

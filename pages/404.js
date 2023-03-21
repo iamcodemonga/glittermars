@@ -3,15 +3,14 @@ import Navbar from 'components/Navbar';
 import Footer from 'components/Footer';
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux';
-import { fetchUser } from '@/features/authSlice';
 import { initializeCart } from '@/features/cartSlice';
+import axios from 'axios';
 
 const NotFound = () => {
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchUser())
     dispatch(initializeCart())
   })
 

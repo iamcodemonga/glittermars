@@ -15,7 +15,7 @@ export const fetchUser = createAsyncThunk('auth/user', async() => {
     }
 
     try {
-        const { data } = await axios(`http://localhost:3005/user/${userid}`, { withCredentials: true });
+        const { data } = await axios(`http://localhost:3005/user`, { withCredentials: true });
         return data;
     } catch (error) {
         console.log(error);
@@ -33,7 +33,16 @@ export const loginUser = createAsyncThunk('auth/login', async(userInfo) => {
 })
 
 export const logoutUser = createAsyncThunk('auth/logout', async() => {
-    localStorage.removeItem('id');
+    try {
+        const { data } = await axios('http://localhost:3005/auth/logout', { withCredentials: true })
+        if(data.status == 200){
+            console.log(data.message)
+            return null;
+        }
+    } catch (error) {
+        console.log(error)
+    }
+    console.log(data.message)
     return null;
 })
 

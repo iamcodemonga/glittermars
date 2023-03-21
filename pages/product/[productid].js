@@ -8,16 +8,19 @@ import { bestProducts } from 'components/JsonData';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchUser } from '@/features/authSlice';
 import { initializeCart, addProduct } from '@/features/cartSlice';
+import useSWR from 'swr';
+import { toast } from 'react-toastify'
+// import 'react-toastify/dist/ReactToastify.css';
+import BeatLoader from 'react-spinners/BeatLoader';
 // import ReactImageMagnify from 'react-image-magnify';
 
-const Product = ({ product, recommended }) => {
-
-
+const Product = ({ product, recommended, user, customer, opinions }) => {
+    
     const [ activeIndex, setActiveIndex ] = useState(0);
-    // const cart = useSelector((state) => state.cart)
     const [ cartQuantity, setCartQuantity ] = useState(1)
+    const [ review, setReview ] = useState({ title: "", rating: 5, description: "" })
+    const [ loader, setLoader ] = useState(false)
     const dispatch = useDispatch();
 
     const handleAdd = () => {
@@ -53,16 +56,93 @@ const Product = ({ product, recommended }) => {
         }
     }
 
+    const fetchReviews = async() => {
+        try {
+            const getComment = await axios(`http://localhost:3005/products/reviews/${product._id}`);
+            return getComment.data;
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const { data: reviews, mutate, isValidating } = useSWR('products/getReviews', fetchReviews, { refreshInterval: 5000})
+
+    const handleReview = async(e) => {
+        e.preventDefault();
+        setLoader(true)
+
+        if ( !review.title || !review.description ) {
+            setLoader(false)
+            toast.error('please fill in all fields!!!', {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+            return;
+        }
+
+        if (!user) {
+            setLoader(false)
+            toast.error('you are not logged in!!!', {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+            return;
+        }
+
+        if (!customer) {
+            setLoader(false)
+            toast.error('you havn\'t purchased this product!!!', {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+            return;
+        }
+
+        const addComment = await axios.post(`http://localhost:3005/products/review/${product._id}?user=${user._id}`, { review });
+        toast.success(`Thanks for the review!!!`, {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+        });
+        mutate()
+        setReview({ title: "", rating: 5, description: "" })
+        setLoader(false)
+        return addComment.data.status.review;
+
+    }
+
     useEffect(() => {
-      dispatch(fetchUser())
-      dispatch(initializeCart())
+        dispatch(initializeCart())
     },[])
 
     return (
         <>
             <Cartbar />
             <Searchbar />
-            <Navbar />
+            <Navbar user={user} />
             <section id="product-view" style={{overflowX: 'hidden'}} className="mt-5 pb-3">
                 <div className="container">
                     <div className="row gx-5 gy-4">
@@ -105,7 +185,7 @@ const Product = ({ product, recommended }) => {
                                         </div>
                                     </div>
                                     <button className="btn btn-dark btn-lg mt-4 w-100" type="button" onClick={() => dispatch(addProduct({cartQuantity, ...product}))}>ADD TO CART</button>
-                                    <button className="btn btn-dark btn-lg mt-4 w-100 btn-special" type="button">BUY NOW!</button>
+                                    <Link href={`/checkout?type=onetime&pid=${product._id}&qty=${cartQuantity}`} className="btn btn-dark btn-lg mt-4 w-100 btn-special" type="button">BUY NOW!</Link>
                                 </div>
                             </div>
                         </div>
@@ -159,16 +239,17 @@ const Product = ({ product, recommended }) => {
                         <div className="col-12">
                             <div>
                                 <div className="comment-section mb-5 pb-2">
-                                    <h2 className='mt-0'>Customer Reviews</h2>
-                                    <div className='d-non'>
-                                        <form className="review-form">
+                                    <h2 className='mt-0'>{ opinions < 1 ? !customer ? "" : "Customer Reviews" : "Customer Reviews" }</h2>
+                                    {/* {opinions.length < 1 ? customer ? :<h2 className='mt-0'>Customer Reviews</h2>} */}
+                                    {customer && <div>
+                                        <form className="review-form" onSubmit={handleReview}>
                                             <div className="mb-3">
-                                                <label className="form-label">Name</label>
-                                                <input className="form-control border-0" type="text" placeholder="what's ya name" value={''} />
+                                                <label className="form-label">Review Title</label>
+                                                <input className="form-control border-0" type="text" placeholder="add a title" value={review.title} onChange={(e) => setReview({ ...review, title: e.target.value })} />
                                             </div>
                                             <div className="mb-3">
                                                 <label className="form-label">Product Rating</label>
-                                                <select className="form-select py-2" value={5}>
+                                                <select className="form-select py-2" value={review.rating} onChange={(e) => setReview({ ...review, rating: e.target.value })} >
                                                     <optgroup label="Rate this product">
                                                         <option value={5}>5</option>
                                                         <option value={4}>4</option>
@@ -178,18 +259,22 @@ const Product = ({ product, recommended }) => {
                                                     </optgroup>
                                                 </select>
                                             </div>
-                                            <div className="mb-3">
-                                                <label className="form-label">Review Title</label>
-                                                <input className="form-control border-0" type="text" placeholder="add a title" value={''} />
-                                            </div>
                                             <div className="mb-4">
                                                 <label className="form-label">Body of review</label>
-                                                <textarea className="form-control border-0" placeholder="What do you think?" rows={4} value={""} />
+                                                <textarea className="form-control border-0" placeholder="What do you think?" rows={4} value={review.description} onChange={(e) => setReview({ ...review, description: e.target.value })} />
                                             </div>
-                                            <button className="btn btn-dark btn-special border-0" type="submit">Submit review</button>
+                                            {loader ? <button className="btn btn-dark btn-special border-0" type="submit"><BeatLoader size={7} color={"#f3dcd1"} loading={loader} aria-label="Loading Spinner" data-testid="loader" /></button> : <button className="btn btn-dark btn-special border-0" type="submit">Submit review</button>}
+                                            
                                         </form>
-                                    </div>
-                                    <div className="comment mt-5">
+                                    </div>}
+                                    {reviews && reviews.map((comment, index) => <div className="comment mt-5" key={index}>
+                                        <hr />
+                                        <h6>Rated <strong>{comment.rating}/5</strong> By <strong>{comment.fullname}</strong></h6>
+                                        <h3 className="my-2">{comment.title}</h3>
+                                        <p className="mt-0">{comment.description}</p>
+                                        <p className="text_small text-dark">posted on <strong>{comment.date}</strong></p>
+                                    </div>)}
+                                    {/* <div className="comment mt-4">
                                     <hr />
                                     <h6>Rated <strong>4/5</strong> By <strong>John doe</strong></h6>
                                     <h3 className="my-2">This is the title of the comment!</h3>
@@ -209,14 +294,7 @@ const Product = ({ product, recommended }) => {
                                     <h3 className="my-2">This is the title of the comment!</h3>
                                     <p className="mt-0">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a,</p>
                                     <p className="text_small text-dark">posted on <strong>20-05-2019</strong></p>
-                                    </div>
-                                    <div className="comment mt-4">
-                                    <hr />
-                                    <h6>Rated <strong>4/5</strong> By <strong>John doe</strong></h6>
-                                    <h3 className="my-2">This is the title of the comment!</h3>
-                                    <p className="mt-0">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a,</p>
-                                    <p className="text_small text-dark">posted on <strong>20-05-2019</strong></p>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                         </div>
@@ -245,19 +323,33 @@ const Product = ({ product, recommended }) => {
 // }
 
 export async function getServerSideProps(context) {
-    const { params } = context
-    const productData = await axios(`http://localhost:3005/products/${params.productid}`);
-    const similarData = await axios(`http://localhost:3005/products/recommended/${params.productid}`);
-    let reviews;
-    if (productData.data.error){
-        console.log(productData.data.message)
-    }
-    return {
-        props: {
-            product: productData.data.product[0],
-            recommended: similarData.data
-            // reviews:
+    const { req, params } = context
+    const { cookie } = req.headers;
+    try {
+        const productData = await axios(`http://localhost:3005/products/${params.productid}`, { headers: { cookie: cookie || '' } });
+        const similarData = await axios(`http://localhost:3005/products/recommended/${params.productid}`);
+        const user = await axios("http://localhost:3005/user/", { headers: { cookie: cookie || '' } } );
+        const reviews = await axios(`http://localhost:3005/products/reviews/${params.productid}`);
+        if (productData.data.error){
+            return {
+                redirect: {
+                    destination: '/',
+                    permanent: false
+                }
+            }
         }
+        return {
+            props: {
+                product: productData.data.product[0],
+                recommended: similarData.data,
+                user: user.data,
+                customer: productData.data.customer,
+                opinions: reviews.data
+                // reviews:
+            }
+        }
+    } catch (error) {
+        console.log(error)
     }
 }
 export default Product

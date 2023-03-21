@@ -11,15 +11,13 @@ import Footer from 'components/Footer';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { fetchUser } from '@/features/authSlice';
 import { initializeCart } from '@/features/cartSlice'
 
-export default function Home({ latests, bestProducts }) {
+export default function Home({ latests, bestProducts, user }) {
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchUser())
     dispatch(initializeCart())
   })
 
@@ -27,7 +25,7 @@ export default function Home({ latests, bestProducts }) {
     <>
       <SearchBar />
       <CartBar />
-      <Navbar />
+      <Navbar user={user} />
       <Banner />
       <NewProducts latests={latests} />
       <BestSellingProducts bestProducts={bestProducts} />
@@ -38,11 +36,17 @@ export default function Home({ latests, bestProducts }) {
   )
 }
 
-export async function getStaticProps() {
-  const newData = await axios('http://localhost:3005/products/new');
-  const bestData = await axios('http://localhost:3005/products/');
-
-  return {
-    props: { latests: newData.data, bestProducts: bestData.data }
-  }
+export async function getServerSideProps(context) {
+  const { req } = context;
+    const { cookie } = req.headers;
+    try {
+        const user = await axios("http://localhost:3005/user/", { headers: { cookie: cookie || '' } } );
+        const newData = await axios('http://localhost:3005/products/new');
+        const bestData = await axios('http://localhost:3005/products/');
+        return {
+          props: { latests: newData.data, bestProducts: bestData.data, user: user.data }
+        }
+    } catch (error) {
+        console.log(error)
+    }
 }

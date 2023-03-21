@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { logoutUser } from '@/features/authSlice';
 
-const Navbar = () => {
+const Navbar = ({ user }) => {
 
     const router = useRouter();
     const dispatch = useDispatch();
@@ -74,6 +74,7 @@ const Navbar = () => {
     const handleLogout = (e) => {
         e.preventDefault();
         dispatch(logoutUser())
+        router.reload()
     }
 
   return (
@@ -87,6 +88,17 @@ const Navbar = () => {
                     <a data-bs-toggle="tooltip" data-bss-tooltip data-bs-placement="bottom" className="bar-link" href="mailto:codemonga@gmail.com" title="send us mails" target='_blank'>support@glittermars.com</a>
                 </div>
                 <div>
+                    {user ? <>
+                                <Link href='/account' className='me-3 bar-link'>Account</Link>
+                                <Link href='/' className='bar-link' onClick={handleLogout}>logout</Link>
+                            </> :
+                            <>
+                                <Link href='/auth/login' className='me-3 bar-link'>Login</Link>
+                                <Link href='/auth/register' className='bar-link'>Register</Link>
+                            </>
+                    }
+                </div>
+                {/* <div>
                     {!auth.loading ?
                          auth.user ? <>
                             <Link href='/account' className='me-3 bar-link'>Account</Link>
@@ -100,7 +112,7 @@ const Navbar = () => {
                             <span className='me-3 bar-link' disabled>---------------</span>
                         </>
                     }
-                </div>
+                </div> */}
             </div>
             <nav className="navbar navbar-light navbar-expand-lg py-2">
                 <div className="container">

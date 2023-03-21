@@ -51,7 +51,7 @@ const NewProducts = ({ latests }) => {
                         <div className="position-relative">
                             {latest.quantity > 0 ? <button className="btn btn-info btn-sm disabled position-absolute" type="button" style={{right: 0}} disabled>in stock</button> : <button className="btn btn-secondary btn-sm disabled position-absolute" type="button" style={{right: 0}} disabled>sold out</button>}
                             <Link href={`/product/${latest._id}`} passHref>
-                                <Image className="img-fluid" src={latest.images.split(',')[0]} style={{aspectRatio: '5/4', objectFit: 'cover'}} width={500} height={400} />
+                                <Image className="img-fluid" src={latest.images.split(',')[0]} style={{aspectRatio: '5/4', objectFit: 'cover'}} width={500} height={400} alt='latest_products' />
                             </Link>
                         </div>
                         <div className="card-body px-0">

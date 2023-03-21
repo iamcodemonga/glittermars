@@ -14,7 +14,7 @@ const TopCategories = () => {
                             <div className="category-border d-flex justify-content-center align-items-center">
                                 <button className="btn btn-light" type="button">Clothing</button>
                             </div>
-                            <Image className="h-100 w-100 category-img" style={{backgroundColor: '#3c0000', objectFit: 'cover'}} src="https://images.pexels.com/photos/1043473/pexels-photo-1043473.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" fill />
+                            <Image className="h-100 w-100 category-img" style={{backgroundColor: '#3c0000', objectFit: 'cover'}} src="https://images.pexels.com/photos/1043473/pexels-photo-1043473.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt='category_image' fill />
                         </div>
                     </Link>
                 </div>
@@ -25,7 +25,7 @@ const TopCategories = () => {
                                 <div className="category-border d-flex justify-content-center align-items-center">
                                     <button className="btn btn-light" type="button">Jewelries</button>
                                 </div>
-                                <Image className="h-100 w-100 category-img" style={{backgroundColor: '#3c0000', objectFit: 'cover'}} src="https://images.pexels.com/photos/3266700/pexels-photo-3266700.jpeg?auto=compress&cs=tinysrgb&w=1600" fill />
+                                <Image className="h-100 w-100 category-img" style={{backgroundColor: '#3c0000', objectFit: 'cover'}} src="https://images.pexels.com/photos/3266700/pexels-photo-3266700.jpeg?auto=compress&cs=tinysrgb&w=1600" alt='category_image' fill />
                         </div>
                     </Link>
                 </div>
@@ -36,7 +36,7 @@ const TopCategories = () => {
                                 <div className="category-border d-flex justify-content-center align-items-center">
                                     <button className="btn btn-light" type="button">Shoes</button>
                                 </div>
-                                <Image className="h-100 w-100 category-img" style={{backgroundColor: '#3c0000', objectFit: 'cover'}} src="https://images.pexels.com/photos/1032110/pexels-photo-1032110.jpeg?auto=compress&cs=tinysrgb&w=1600" fill />
+                                <Image className="h-100 w-100 category-img" style={{backgroundColor: '#3c0000', objectFit: 'cover'}} src="https://images.pexels.com/photos/1032110/pexels-photo-1032110.jpeg?auto=compress&cs=tinysrgb&w=1600" alt='category_image' fill />
                         </div>
                     </Link>
                 </div>
@@ -47,7 +47,7 @@ const TopCategories = () => {
                                 <div className="category-border d-flex justify-content-center align-items-center">
                                     <button className="btn btn-light" type="button">Accessories</button>
                                 </div>
-                                <Image className="h-100 w-100 category-img" style={{backgroundColor: '#3c0000', objectFit: 'cover'}} src="https://images.pexels.com/photos/158741/gshock-watch-sports-watch-stopwatch-158741.jpeg?auto=compress&cs=tinysrgb&w=800" fill />
+                                <Image className="h-100 w-100 category-img" style={{backgroundColor: '#3c0000', objectFit: 'cover'}} src="https://images.pexels.com/photos/158741/gshock-watch-sports-watch-stopwatch-158741.jpeg?auto=compress&cs=tinysrgb&w=800" alt='category_image' fill />
                         </div>
                     </Link>
                 </div>

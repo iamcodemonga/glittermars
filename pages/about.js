@@ -6,8 +6,9 @@ import { useEffect } from 'react'
 import { useDispatch } from 'react-redux';
 import { fetchUser } from '@/features/authSlice';
 import { initializeCart } from '@/features/cartSlice';
+import axios from 'axios'
 
-const About = () => {
+const About = ({ user }) => {
 
     const dispatch = useDispatch();
 
@@ -20,7 +21,7 @@ const About = () => {
     <>
         <Searchbar />
         <Cartbar />
-        <Navbar />
+        <Navbar user={user} />
         <section className="mb-5 pt-5" style={{marginTop: 100}}>
             <div className="container my-5 py-5">
                 <div className="row">
@@ -42,6 +43,20 @@ const About = () => {
         <Footer />
     </>
   )
+}
+
+export async function getServerSideProps(context) {
+    
+    const { req } = context;
+    const { cookie } = req.headers;
+    try {
+        const user = await axios("http://localhost:3005/user/", { headers: { cookie: cookie || '' } } );
+        return {
+            props: { user: user.data }
+        }
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 export default About

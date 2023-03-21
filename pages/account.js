@@ -10,19 +10,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchUser } from '@/features/authSlice';
 import { useRouter } from 'next/router';
 import { initializeCart } from '@/features/cartSlice';
+import axios from 'axios';
 
-const Account = () => {
+const Account = ({ user }) => {
 
     const dispatch = useDispatch();
-    const auth = useSelector((state) => state.auth)
-    const router = useRouter();
+    // const auth = useSelector((state) => state.auth)
+    // const router = useRouter();
 
     useEffect(() => {
-        if(!localStorage.getItem('id')) {
-            router.push('/');
-            return;
-        }
-        dispatch(fetchUser())
+        // if(!localStorage.getItem('id')) {
+        //     router.push('/');
+        //     return;
+        // }
+        // dispatch(fetchUser())
         dispatch(initializeCart())
     },[])
 
@@ -30,11 +31,13 @@ const Account = () => {
         <>
             <SearchBar />
             <CartBar />
-            <Navbar />
+            <Navbar user={user} />
             <section className="mt-5 pt-5">
                 <div className="container mt-5 pt-5">
-                    {auth.loading ? <h1 className="mb-3 text-accent">_ _ _ _ _ _ _ _ _ _ _,</h1> : <h1 className="mb-3 text-accent">{auth.user.fullname},</h1>}
-                    {auth.loading ? <h1 className="mb-3 text-accent">_ _ _ _ _ _ _ _ _ _,</h1> : <p>{auth.user.email}</p>}
+                    {/* {auth.loading ? <h1 className="mb-3 text-accent">_ _ _ _ _ _ _ _ _ _ _,</h1> : <h1 className="mb-3 text-accent">{auth.user.fullname},</h1>}
+                    {auth.loading ? <h1 className="mb-3 text-accent">_ _ _ _ _ _ _ _ _ _,</h1> : <p>{auth.user.email}</p>} */}
+                    <h1 className="mb-3 text-accent">{user.fullname},</h1>
+                    <p>{user.email}</p>
                 </div>
             </section>
             <section id="orders" className="pb-5">
@@ -79,6 +82,30 @@ const Account = () => {
             <Footer />
         </>
     )
+}
+
+export async function getServerSideProps(context) {
+    
+    const { req } = context;
+    const { cookie } = req.headers;
+    try {
+        const user = await axios("http://localhost:3005/user/", { headers: { cookie: cookie || '' } } );
+        console.log(user.data)
+        if (!user.data){
+            return {
+                redirect: {
+                    destination: '/',
+                    permanent: false
+                }
+            }
+        } else {
+            return {
+                props: { user: user.data }
+            }
+        }
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 export default Account
