@@ -3,14 +3,12 @@ import Head from 'next/head';
 import Script from 'next/script';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
-import authReducer from '../features/authSlice'
 import cartReducer from '../features/cartSlice'
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify'
 
 const store = configureStore({
   reducer: {
-    auth: authReducer,
     cart: cartReducer
   }
 })

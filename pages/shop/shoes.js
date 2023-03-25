@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router'
 import Navbar from 'components/Navbar';
-import CartBar from '@/components/Cartbar';
+import Cartbar from '@/components/Cartbar';
 import SearchBar from '@/components/Searchbar';
 import Banner from 'components/banners/ShopBanner'
 import Footer from 'components/Footer';
@@ -63,7 +63,7 @@ const Category = ({ allProducts, user }) => {
     return (
         <>
             <SearchBar />
-            <CartBar />
+            <Cartbar user={user} product={null} cartQuantity={0} />
             <Navbar user={user} />
             <Banner />
             <section className="py-5">

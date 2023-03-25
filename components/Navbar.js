@@ -1,14 +1,13 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { logoutUser } from '@/features/authSlice';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
 
 const Navbar = ({ user }) => {
 
+    const URL = process.env.NEXT_PUBLIC_API_ROOT;
     const router = useRouter();
-    const dispatch = useDispatch();
-    const auth = useSelector((state) => state.auth)
     const cartQuantity = useSelector((state) => state.cart.quantity);
     
     useEffect(() => {
@@ -71,10 +70,17 @@ const Navbar = ({ user }) => {
         }, 300);
     }
 
-    const handleLogout = (e) => {
+    const handleLogout = async(e) => {
         e.preventDefault();
-        dispatch(logoutUser())
-        router.reload()
+        try {
+            const { data } = await axios(`${URL}/auth/logout`, { withCredentials: true })
+            if(data.status == 200){
+                router.push("/");
+                return;
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
 
   return (
@@ -90,7 +96,7 @@ const Navbar = ({ user }) => {
                 <div>
                     {user ? <>
                                 <Link href='/account' className='me-3 bar-link'>Account</Link>
-                                <Link href='/' className='bar-link' onClick={handleLogout}>logout</Link>
+                                <span className='bar-link' style={{cursor: 'pointer'}} onClick={handleLogout}>logout</span>
                             </> :
                             <>
                                 <Link href='/auth/login' className='me-3 bar-link'>Login</Link>
@@ -98,21 +104,6 @@ const Navbar = ({ user }) => {
                             </>
                     }
                 </div>
-                {/* <div>
-                    {!auth.loading ?
-                         auth.user ? <>
-                            <Link href='/account' className='me-3 bar-link'>Account</Link>
-                            <Link href='/' className='bar-link' onClick={handleLogout}>logout</Link>
-                         </> :
-                            <>
-                                <Link href='/auth/login' className='me-3 bar-link'>Login</Link>
-                                <Link href='/auth/register' className='bar-link'>Register</Link>
-                            </>
-                         : <>
-                            <span className='me-3 bar-link' disabled>---------------</span>
-                        </>
-                    }
-                </div> */}
             </div>
             <nav className="navbar navbar-light navbar-expand-lg py-2">
                 <div className="container">

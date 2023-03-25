@@ -1,75 +1,67 @@
-import CartBar from '@/components/Cartbar';
+import Cartbar from '@/components/Cartbar';
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 import SearchBar from '@/components/Searchbar';
 import Link from 'next/link';
 import Image from 'next/image';
-import { bestProducts } from '@/components/JsonData';
 import { useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchUser } from '@/features/authSlice';
-import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
 import { initializeCart } from '@/features/cartSlice';
 import axios from 'axios';
 
-const Account = ({ user }) => {
+const Account = ({ user, orders }) => {
 
     const dispatch = useDispatch();
-    // const auth = useSelector((state) => state.auth)
-    // const router = useRouter();
+    const [ limit, setLimit ] = useState(6);
+
+    const handleMore = () => {
+        setLimit((prev) => prev+3)
+    }
 
     useEffect(() => {
-        // if(!localStorage.getItem('id')) {
-        //     router.push('/');
-        //     return;
-        // }
-        // dispatch(fetchUser())
         dispatch(initializeCart())
     },[])
 
     return (
         <>
             <SearchBar />
-            <CartBar />
+            <Cartbar user={user} product={null} cartQuantity={0} />
             <Navbar user={user} />
             <section className="mt-5 pt-5">
                 <div className="container mt-5 pt-5">
-                    {/* {auth.loading ? <h1 className="mb-3 text-accent">_ _ _ _ _ _ _ _ _ _ _,</h1> : <h1 className="mb-3 text-accent">{auth.user.fullname},</h1>}
-                    {auth.loading ? <h1 className="mb-3 text-accent">_ _ _ _ _ _ _ _ _ _,</h1> : <p>{auth.user.email}</p>} */}
                     <h1 className="mb-3 text-accent">{user.fullname},</h1>
                     <p>{user.email}</p>
                 </div>
             </section>
             <section id="orders" className="pb-5">
-                <div className="container d-none">
+                <div className={orders.length > 0 ? "container" : "container d-none"}>
                     <h4 className="mb-0 fw-bolder">Your Orders</h4>
                     <div className="row gx-4 gy-4 mt-3">
-                        { bestProducts && bestProducts.map((product, index) => <div className="col-sm-12 col-md-12 col-lg-6 col-xl-4 col-xxl-4" key={index}>
+                        { orders && orders.slice(0, limit).map((order, index) => <div className="col-sm-12 col-md-12 col-lg-6 col-xl-4 col-xxl-4" key={index}>
                             <div className="card product-card-grid">
                             <div className="position-relative">
-                                {!product.instock && <button className="btn btn-danger btn-sm disabled position-absolute" type="button" style={{right: 0}} disabled>sold out</button>}
-                                <Link href={product.instock ? "/product" : "#"}>
-                                <Image className="img-fluid" src={product.image} style={{aspectRatio: '5/4', objectFit: 'cover'}} width={500} height={400} />
+                                {order.pending == 0 ? <button className="btn btn-danger btn-sm disabled position-absolute" type="button" style={{right: 0}} disabled>Pending</button> : <button className="btn btn-success btn-sm disabled position-absolute" type="button" style={{right: 0}} disabled>Done</button>}
+                                <Link href={order.quantity > 1 ? `/product/${order._id}` : "#"}>
+                                <Image className="img-fluid" src={order.images.split(',')[0]} style={{aspectRatio: '5/4', objectFit: 'cover'}} width={500} height={400} alt="order_image" />
                                 </Link>
                             </div>
                             <div className="card-body px-0">
                                 <div className="mb-2">
-                                <span className="text-success fw-bold text_small">${product.price*0.8}</span>
-                                    <span className="text-danger fw-bold ms-2 text_small">
-                                    <span style={{textDecoration: 'line-through'}}>${product.price}</span>
+                                <span className="text-success fw-bold text_small">${(order.price)}</span>
+                                    <span className="text-success fw-bold ms-2 text_small">
+                                    <span>(Qty: {order.order_quantity})</span>
                                     </span>
                                 </div>
-                                <Link className="product-title" href={product.instock ? "/product" : "#"}>
-                                    <h5 className="my-0">{product.title}</h5>
+                                <Link className="product-title" href={order.quantity > 1 ? `/product/${order._id}`: "#"}>
+                                    <h5 className="my-0">{order.title}</h5>
                                 </Link>
-                                <button className="btn btn-dark mt-3 w-100 btn-special" type="button">Add to Cart</button>
                             </div>
                             </div>
                         </div>)}
                     </div>
-                    <p className="text-center mt-4"><button className="btn btn-dark btn-special border-0" type="button">More Orders</button></p>
+                    <p className="text-center mt-4"><button className="btn btn-dark btn-special border-0" type="button" onClick={handleMore}>More Orders</button></p>
                 </div>
-                <div className="container d-non">
+                <div className={orders.length > 0 ? "container d-none" : "container"}>
                     <h4 className="mb-0 fw-bolder">Your Orders</h4>
                     <div className="vh-50 w-100 d-flex justify-content-center align-items-center nothing mt-3 mb-5">
                     <div>
@@ -88,9 +80,11 @@ export async function getServerSideProps(context) {
     
     const { req } = context;
     const { cookie } = req.headers;
+    const URL = process.env.API_ROOT;
+
     try {
-        const user = await axios("http://localhost:3005/user/", { headers: { cookie: cookie || '' } } );
-        console.log(user.data)
+        const user = await axios(`${URL}/user`, { headers: { cookie: cookie || '' } } );
+        const orders = await axios(`${URL}/user/orders`, { headers: { cookie: cookie || '' } } );
         if (!user.data){
             return {
                 redirect: {
@@ -100,7 +94,7 @@ export async function getServerSideProps(context) {
             }
         } else {
             return {
-                props: { user: user.data }
+                props: { user: user.data, orders: orders.data.orders }
             }
         }
     } catch (error) {

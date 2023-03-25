@@ -648,6 +648,15 @@ footer a:hover {
   background-color: transparent;
 }
 
+.paylink {
+  color: var(--primaryColor);
+  text-decoration: none;
+}
+
+.paylink:hover {
+  color: var(--accent);
+}
+
 /* .balablue > img {
   width: 100%;
   max-height: 200px;

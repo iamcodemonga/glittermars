@@ -24,7 +24,7 @@ export default function Home({ latests, bestProducts, user }) {
   return (
     <>
       <SearchBar />
-      <CartBar />
+      <CartBar user={user} product={null} cartQuantity={0} />
       <Navbar user={user} />
       <Banner />
       <NewProducts latests={latests} />

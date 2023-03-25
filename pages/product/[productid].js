@@ -13,6 +13,7 @@ import useSWR from 'swr';
 import { toast } from 'react-toastify'
 // import 'react-toastify/dist/ReactToastify.css';
 import BeatLoader from 'react-spinners/BeatLoader';
+import Popup from '@/components/Popup';
 // import ReactImageMagnify from 'react-image-magnify';
 
 const Product = ({ product, recommended, user, customer, opinions }) => {
@@ -21,6 +22,7 @@ const Product = ({ product, recommended, user, customer, opinions }) => {
     const [ cartQuantity, setCartQuantity ] = useState(1)
     const [ review, setReview ] = useState({ title: "", rating: 5, description: "" })
     const [ loader, setLoader ] = useState(false)
+    const [ status, setStatus ] = useState(false)
     const dispatch = useDispatch();
 
     const handleAdd = () => {
@@ -140,7 +142,7 @@ const Product = ({ product, recommended, user, customer, opinions }) => {
 
     return (
         <>
-            <Cartbar />
+            <Cartbar user={user} product={null} cartQuantity={0} />
             <Searchbar />
             <Navbar user={user} />
             <section id="product-view" style={{overflowX: 'hidden'}} className="mt-5 pb-3">
@@ -185,7 +187,7 @@ const Product = ({ product, recommended, user, customer, opinions }) => {
                                         </div>
                                     </div>
                                     <button className="btn btn-dark btn-lg mt-4 w-100" type="button" onClick={() => dispatch(addProduct({cartQuantity, ...product}))}>ADD TO CART</button>
-                                    <Link href={`/checkout?type=onetime&pid=${product._id}&qty=${cartQuantity}`} className="btn btn-dark btn-lg mt-4 w-100 btn-special" type="button">BUY NOW!</Link>
+                                    <button href={`/checkout?type=onetime&pid=${product._id}&qty=${cartQuantity}`} className="btn btn-dark btn-lg mt-4 w-100 btn-special" type="button" onClick={() => setStatus(true)}>BUY NOW!</button>
                                 </div>
                             </div>
                         </div>
@@ -301,6 +303,7 @@ const Product = ({ product, recommended, user, customer, opinions }) => {
                     </div>
                 </div>
             </section>
+            <Popup status={status} handleHide={() => setStatus(false)} user={user} product={product} cartQuantity={cartQuantity} bulk={false} />
             <Footer />
         </>
     )

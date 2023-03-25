@@ -4,7 +4,6 @@ import Cartbar from '@/components/Cartbar';
 import Searchbar from '@/components/Searchbar';
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux';
-import { fetchUser } from '@/features/authSlice';
 import { initializeCart } from '@/features/cartSlice';
 import axios from 'axios'
 
@@ -13,14 +12,13 @@ const About = ({ user }) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-      dispatch(fetchUser())
       dispatch(initializeCart())
     })
 
   return (
     <>
         <Searchbar />
-        <Cartbar />
+        <Cartbar user={user} product={null} cartQuantity={0} />
         <Navbar user={user} />
         <section className="mb-5 pt-5" style={{marginTop: 100}}>
             <div className="container my-5 py-5">

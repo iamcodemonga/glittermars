@@ -1,4 +1,4 @@
-import CartBar from "@/components/Cartbar"
+import Cartbar from "@/components/Cartbar"
 import Footer from "@/components/Footer"
 import Navbar from "@/components/Navbar"
 import SearchBar from "@/components/Searchbar";
@@ -18,7 +18,7 @@ const login = ({ user }) => {
     return (
         <>
             <SearchBar />
-            <CartBar />
+            <Cartbar user={user} product={null} cartQuantity={0} />
             <Navbar user={user} />
             <Form />
             <Footer />
@@ -29,9 +29,10 @@ const login = ({ user }) => {
 export async function getServerSideProps(context) {
     const { req } = context;
     const { cookie } = req.headers;
+    const URL = process.env.API_ROOT;
 
     try {
-        const { data } = await axios('http://localhost:3005/user', { headers: { cookie: cookie || '' } })
+        const { data } = await axios(`${URL}/user`, { headers: { cookie: cookie || '' } })
         if(data){
             return {
                 redirect: {

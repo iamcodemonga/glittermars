@@ -166,6 +166,24 @@ const cartSlice = createSlice({
                     progress: undefined,
                     theme: "colored",
                 });
+        },
+        clearCart(state, action) {
+            state.items = [];
+            state.quantity = 0;
+            state.amount = 0;
+            localStorage.setItem("items", JSON.stringify(state.items))
+            localStorage.setItem("total", JSON.stringify(state.amount))
+            localStorage.setItem("quantity", JSON.stringify(state.quantity))
+            toast.info(`Cart items cleared!!!`, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
         }
     }
 })

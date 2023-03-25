@@ -22,7 +22,7 @@ const search = () => {
     return (
         <>
             <Searchbar />
-            <Cartbar />
+            {/* <Cartbar user={user} product={null} cartQuantity={0} /> */}
             <Navbar />
             <section style={{padding: '100px 0', marginTop: 100}}>
                 <div className="container">
