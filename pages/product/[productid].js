@@ -4,20 +4,19 @@ import Navbar from '@/components/Navbar';
 import Searchbar from '@/components/Searchbar';
 import Image from 'next/image';
 import Link from 'next/link';
-import { bestProducts } from 'components/JsonData';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { initializeCart, addProduct } from '@/features/cartSlice';
 import useSWR from 'swr';
 import { toast } from 'react-toastify'
-// import 'react-toastify/dist/ReactToastify.css';
 import BeatLoader from 'react-spinners/BeatLoader';
 import Popup from '@/components/Popup';
 // import ReactImageMagnify from 'react-image-magnify';
 
 const Product = ({ product, recommended, user, customer, opinions }) => {
-    
+
+    const URL = process.env.NEXT_PUBLIC_API_ROOT;
     const [ activeIndex, setActiveIndex ] = useState(0);
     const [ cartQuantity, setCartQuantity ] = useState(1)
     const [ review, setReview ] = useState({ title: "", rating: 5, description: "" })
@@ -60,14 +59,14 @@ const Product = ({ product, recommended, user, customer, opinions }) => {
 
     const fetchReviews = async() => {
         try {
-            const getComment = await axios(`http://localhost:3005/products/reviews/${product._id}`);
+            const getComment = await axios(`${URL}/products/reviews/${product._id}`);
             return getComment.data;
         } catch (error) {
             console.log(error)
         }
     }
 
-    const { data: reviews, mutate, isValidating } = useSWR('products/getReviews', fetchReviews, { refreshInterval: 5000})
+    const { data: reviews, mutate } = useSWR('products/getReviews', fetchReviews, { refreshInterval: 2000})
 
     const handleReview = async(e) => {
         e.preventDefault();
@@ -118,7 +117,7 @@ const Product = ({ product, recommended, user, customer, opinions }) => {
             return;
         }
 
-        const addComment = await axios.post(`http://localhost:3005/products/review/${product._id}?user=${user._id}`, { review });
+        const addComment = await axios.post(`${URL}/products/review/${product._id}?user=${user._id}`, { review });
         toast.success(`Thanks for the review!!!`, {
             position: "bottom-right",
             autoClose: 5000,
@@ -309,30 +308,15 @@ const Product = ({ product, recommended, user, customer, opinions }) => {
     )
 }
 
-
-// export async function getStaticPaths() {
-//     const { data } = await axios('http://localhost:3005/products');
-//     const paths = data.map((result) => {
-//         return {
-//             params: {
-//                 productid: result._id.toString()
-//             },
-//         }
-//     })
-//     return {
-//         paths,
-//         fallback: false
-//     }
-// }
-
 export async function getServerSideProps(context) {
     const { req, params } = context
     const { cookie } = req.headers;
+    const URL = process.env.API_ROOT;
     try {
-        const productData = await axios(`http://localhost:3005/products/${params.productid}`, { headers: { cookie: cookie || '' } });
-        const similarData = await axios(`http://localhost:3005/products/recommended/${params.productid}`);
-        const user = await axios("http://localhost:3005/user/", { headers: { cookie: cookie || '' } } );
-        const reviews = await axios(`http://localhost:3005/products/reviews/${params.productid}`);
+        const productData = await axios(`${URL}/products/${params.productid}`, { headers: { cookie: cookie || '' } });
+        const similarData = await axios(`${URL}/products/recommended/${params.productid}`);
+        const user = await axios(`${URL}/user/`, { headers: { cookie: cookie || '' } } );
+        const reviews = await axios(`${URL}/products/reviews/${params.productid}`);
         if (productData.data.error){
             return {
                 redirect: {
@@ -348,7 +332,6 @@ export async function getServerSideProps(context) {
                 user: user.data,
                 customer: productData.data.customer,
                 opinions: reviews.data
-                // reviews:
             }
         }
     } catch (error) {

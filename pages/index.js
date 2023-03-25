@@ -37,12 +37,13 @@ export default function Home({ latests, bestProducts, user }) {
 }
 
 export async function getServerSideProps(context) {
-  const { req } = context;
+    const { req } = context;
     const { cookie } = req.headers;
+    const URL = process.env.API_ROOT;
     try {
-        const user = await axios("http://localhost:3005/user/", { headers: { cookie: cookie || '' } } );
-        const newData = await axios('http://localhost:3005/products/new');
-        const bestData = await axios('http://localhost:3005/products/');
+        const user = await axios(`${URL}/user/`, { headers: { cookie: cookie || '' } } );
+        const newData = await axios(`${URL}/products/new`);
+        const bestData = await axios(`${URL}/products/trending`);
         return {
           props: { latests: newData.data, bestProducts: bestData.data, user: user.data }
         }

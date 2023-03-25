@@ -13,6 +13,7 @@ import { initializeCart, addToCart } from '@/features/cartSlice';
 
 const Shop = ({ allProducts, user }) => {
 
+    const URL = process.env.NEXT_PUBLIC_API_ROOT;
     const router = useRouter();
     const dispatch = useDispatch();
     const [ products, setProduct ] = useState(allProducts)
@@ -51,7 +52,7 @@ const Shop = ({ allProducts, user }) => {
             return;
         }
 
-        const { data } = await axios(`http://localhost:3005/products?min=${price.min}&max=${price.max}`);
+        const { data } = await axios(`${URL}/products?min=${price.min}&max=${price.max}`);
         router.push(`?min=${price.min}&max=${price.max}`, undefined, { shallow: true})
         setProduct(data)
         return data;
@@ -139,6 +140,8 @@ const Shop = ({ allProducts, user }) => {
 }
 
 export async function getServerSideProps(context) {
+
+    const URL = process.env.API_ROOT;
     const { req, query } = context;
     const { cookie } = req.headers;
     const { min, max } = query;
@@ -152,8 +155,8 @@ export async function getServerSideProps(context) {
     }
 
     try {
-        const { data } = await axios(`http://localhost:3005/products${queryString}`);
-        const user = await axios("http://localhost:3005/user/", { headers: { cookie: cookie || '' } } );
+        const { data } = await axios(`${URL}/products${queryString}`);
+        const user = await axios(`${URL}/user/`, { headers: { cookie: cookie || '' } } );
         return {
             props: { allProducts: data, user: user.data }
         }

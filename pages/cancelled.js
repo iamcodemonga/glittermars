@@ -1,10 +1,6 @@
 import Link from 'next/link';
 import Navbar from 'components/Navbar';
 import Footer from 'components/Footer';
-import { useEffect } from 'react'
-import { useDispatch } from 'react-redux';
-import { initializeCart } from '@/features/cartSlice';
-import axios from 'axios';
 
 const Thanks = () => {
     return (

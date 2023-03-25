@@ -45,10 +45,11 @@ const About = ({ user }) => {
 
 export async function getServerSideProps(context) {
     
+    const URL = process.env.API_ROOT;
     const { req } = context;
     const { cookie } = req.headers;
     try {
-        const user = await axios("http://localhost:3005/user/", { headers: { cookie: cookie || '' } } );
+        const user = await axios(`${URL}/user/`, { headers: { cookie: cookie || '' } } );
         return {
             props: { user: user.data }
         }

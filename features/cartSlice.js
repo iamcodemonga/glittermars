@@ -171,9 +171,6 @@ const cartSlice = createSlice({
             state.items = [];
             state.quantity = 0;
             state.amount = 0;
-            localStorage.setItem("items", JSON.stringify(state.items))
-            localStorage.setItem("total", JSON.stringify(state.amount))
-            localStorage.setItem("quantity", JSON.stringify(state.quantity))
             toast.info(`Cart items cleared!!!`, {
                 position: "bottom-right",
                 autoClose: 5000,
@@ -184,9 +181,12 @@ const cartSlice = createSlice({
                 progress: undefined,
                 theme: "colored",
             });
+            localStorage.setItem("items", JSON.stringify(state.items))
+            localStorage.setItem("total", JSON.stringify(state.amount))
+            localStorage.setItem("quantity", JSON.stringify(state.quantity))
         }
     }
 })
 
-export const { initializeCart, addToCart, removeFromCart, addProduct, deleteProduct } = cartSlice.actions;
+export const { initializeCart, addToCart, removeFromCart, addProduct, deleteProduct, clearCart } = cartSlice.actions;
 export default cartSlice.reducer;

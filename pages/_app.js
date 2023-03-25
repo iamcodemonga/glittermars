@@ -20,7 +20,7 @@ const App = ({ Component, pageProps }) =>  {
           <title>glittermars</title>
           <meta name="description" content="Fashion and luxury all in one place, the biggest e-commerce platform for fashion worldwide" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <link rel="icon" href="/favicon.ico" />
+          <link rel="icon" href="/shopping-cart.png" />
       </Head>
       <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></Script>
       <Provider store={store}>

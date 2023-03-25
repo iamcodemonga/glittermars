@@ -2,7 +2,6 @@ import Cartbar from "@/components/Cartbar"
 import Footer from "@/components/Footer"
 import Navbar from "@/components/Navbar"
 import SearchBar from "@/components/Searchbar"
-import Link from "next/link"
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { initializeCart } from '@/features/cartSlice';
@@ -14,8 +13,8 @@ import BeatLoader from 'react-spinners/BeatLoader';
 
 const Checkout = ({ user, query, product }) => {
 
+    const URL = process.env.NEXT_PUBLIC_API_ROOT;
     const dispatch = useDispatch();
-
     const cart = useSelector(state => state.cart)
     const [ fullname, setFullname ] = useState(user ? user.fullname : "")
     const [ email, setEmail ] = useState(user ? user.email : "")
@@ -96,7 +95,7 @@ const Checkout = ({ user, query, product }) => {
 
         console.log(queryString)
         try {
-            const { data } = await axios.post(`http://localhost:3005/user/order${queryString}`, { buyer, products} )
+            const { data } = await axios.post(`${URL}/user/order${queryString}`, { buyer, products} )
             toast.success(data.message, {
                 position: "bottom-right",
                 autoClose: 5000,
@@ -486,6 +485,8 @@ const Checkout = ({ user, query, product }) => {
 }
 
 export async function getServerSideProps(context) {
+
+    const URL = process.env.API_ROOT;
       const { req, query } = context;
       const { cookie } = req.headers;
       const { type, pid, qty } = query
@@ -524,9 +525,9 @@ export async function getServerSideProps(context) {
 
       try {
           let product = null;
-          const user = await axios("http://localhost:3005/user/", { headers: { cookie: cookie || '' } } );
+          const user = await axios(`${URL}/user/`, { headers: { cookie: cookie || '' } } );
           if(type == 'onetime'){
-            const productData = await axios(`http://localhost:3005/products/${pid}`);
+            const productData = await axios(`${URL}/products/${pid}`);
             if (productData.data.error) {
                 return {
                     redirect: { destination: '/', permanent: false }
