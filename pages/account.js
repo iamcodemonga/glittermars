@@ -1,5 +1,5 @@
 // import Cartbar from '@/components/Cartbar';
-import CartBar from '../components/Cartbar';
+import CartBar from 'components/Cartbar';
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 import SearchBar from '@/components/Searchbar';
@@ -26,7 +26,7 @@ const Account = ({ user, orders }) => {
     return (
         <>
             <SearchBar />
-            <Cartbar user={user} product={null} cartQuantity={0} />
+            <CartBar user={user} product={null} cartQuantity={0} />
             <Navbar user={user} />
             <section className="mt-5 pt-5">
                 <div className="container mt-5 pt-5">
