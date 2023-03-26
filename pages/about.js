@@ -1,7 +1,7 @@
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 // import Cartbar from '@/components/Cartbar';
-import Cartbar from 'components/Cartbar';
+import CartBar from '../components/Cartbar';
 import Searchbar from '@/components/Searchbar';
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux';
@@ -19,7 +19,7 @@ const About = ({ user }) => {
   return (
     <>
         <Searchbar />
-        <Cartbar user={user} product={null} cartQuantity={0} />
+        <CartBar user={user} product={null} cartQuantity={0} />
         <Navbar user={user} />
         <section className="mb-5 pt-5" style={{marginTop: 100}}>
             <div className="container my-5 py-5">

@@ -1,4 +1,4 @@
-import Cartbar from "components/Cartbar"
+import CartBar from "../../components/Cartbar"
 import Footer from "@/components/Footer"
 import Navbar from "@/components/Navbar"
 import SearchBar from "@/components/Searchbar";
@@ -18,7 +18,7 @@ const register = ({ user }) => {
     return (
         <>
             <SearchBar />
-            <Cartbar user={user} product={null} cartQuantity={0} />
+            <CartBar user={user} product={null} cartQuantity={0} />
             <Navbar user={user} />
             <Form />
             <Footer />
