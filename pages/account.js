@@ -42,7 +42,7 @@ const Account = ({ user, orders }) => {
                             <div className="position-relative">
                                 {order.pending == 0 ? <button className="btn btn-danger btn-sm disabled position-absolute" type="button" style={{right: 0}} disabled>Pending</button> : <button className="btn btn-success btn-sm disabled position-absolute" type="button" style={{right: 0}} disabled>Done</button>}
                                 <Link href={order.quantity > 1 ? `/product/${order._id}` : "#"}>
-                                <Image className="img-fluid" src={order.images.split(',')[0]} style={{aspectRatio: '5/4', objectFit: 'cover'}} width={500} height={400} alt="order_image" />
+                                <Image className="img-fluid" src={order.images.split(',')[0]} style={{aspectRatio: '5/4', objectFit: 'cover'}} width={700} height={500} alt="order_image" />
                                 </Link>
                             </div>
                             <div className="card-body px-0">

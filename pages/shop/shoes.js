@@ -9,7 +9,6 @@ import Footer from 'components/Footer';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { fetchUser } from '@/features/authSlice';
 import { initializeCart, addToCart } from '@/features/cartSlice';
 
 const Category = ({ allProducts, user }) => {

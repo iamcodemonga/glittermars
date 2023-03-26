@@ -111,7 +111,7 @@ const Shop = ({ allProducts, user }) => {
                                     <div className="position-relative">
                                         {product.quantity < 1 && <button className="btn btn-danger btn-sm disabled position-absolute" type="button" style={{right: 0}} disabled>sold out</button>}
                                         <Link href={product.quantity > 0 ? `/product/${product._id}` : "#"}>
-                                        <Image className="img-fluid" src={product.images.split(',')[0]} style={{aspectRatio: '5/4', objectFit: 'cover'}} width={700} height={400} />
+                                        <Image className="img-fluid" src={product.images.split(',')[0]} style={{aspectRatio: '5/4', objectFit: 'cover'}} width={700} height={400} alt="shop_image" />
                                         </Link>
                                     </div>
                                     <div className="card-body px-0">

@@ -28,7 +28,7 @@ export default function Home({ latests, bestProducts, user }) {
       <Navbar user={user} />
       <Banner />
       <NewProducts latests={latests} />
-      <BestSellingProducts bestProducts={bestProducts} />
+      {bestProducts.length > 0 && <BestSellingProducts bestProducts={bestProducts} />}
       <HomeCTA />
       <Categories />
       <Footer />
