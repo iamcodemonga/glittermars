@@ -1,4 +1,4 @@
-import CartBar from "@/components/CartBar";
+import CartBar from "@/components/Cartbar";
 import Form from "@/components/forms/UploadForm";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";

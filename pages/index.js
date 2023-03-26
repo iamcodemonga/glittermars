@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import SearchBar from 'components/Searchbar';
-import CartBar from '@/components/CartBar';
+import CartBar from '@/components/Cartbar';
 import Navbar from 'components/Navbar';
 import Banner from 'components/banners/HomeBanner';
 import NewProducts from 'components/datalist/NewProducts';

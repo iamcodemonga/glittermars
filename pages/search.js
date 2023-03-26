@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import Navbar from 'components/Navbar';
-import Cartbar from '@/components/CartBar';
+import Cartbar from '@/components/Cartbar';
 import Searchbar from '@/components/Searchbar';
 import Footer from 'components/Footer';
 import { useEffect } from 'react'

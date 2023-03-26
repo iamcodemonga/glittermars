@@ -1,6 +1,6 @@
 import Footer from "@/components/Footer"
 import Navbar from "@/components/Navbar"
-import CartBar from '@/components/CartBar'
+import CartBar from '@/components/Cartbar'
 import SearchBar from "@/components/Searchbar";
 import Form from '@/components/forms/LoginForm';
 import { useEffect } from 'react'
