@@ -1,6 +1,7 @@
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
-import Cartbar from '@/components/Cartbar';
+// import Cartbar from '@/components/Cartbar';
+import Cartbar from 'components/Cartbar';
 import Searchbar from '@/components/Searchbar';
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux';
