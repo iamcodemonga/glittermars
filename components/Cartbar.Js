@@ -23,7 +23,7 @@ const CartBar = ({ user, product, cartQuantity }) => {
     }
 
     return (
-        <>
+        <div>
             <aside className="cart-box">
                 <div className="cart-bar">
                     <div className="h-100 cart-wrapper pb-5 flex-column justify-content-between align-items-lg-stretch">
@@ -83,7 +83,7 @@ const CartBar = ({ user, product, cartQuantity }) => {
                 </div>
             </aside>
             <Popup status={status} handleHide={() => setStatus(false)} user={user} product={product} cartQuantity={cartQuantity} bulk={true} />
-        </>
+        </div>
     )
 }
 

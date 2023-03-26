@@ -1,4 +1,4 @@
-import Cartbar from '@/components/Cartbar';
+import Cartbar from '@/components/CartBar';
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 import Searchbar from '@/components/Searchbar';
