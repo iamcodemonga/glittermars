@@ -62,7 +62,7 @@ const NewProducts = ({ latests }) => {
                                 </span>
                             </div>
                             <Link className="product-title" href={`/product/${latest._id}`}>
-                                <h5 className="my-0">{latest.title.length < 30 ? `${latest.title.substring(0, 45)}` : `${latest.title.substring(0, 28)}...`}</h5>
+                                <h5 className="my-0">{latest.title.length < 30 ? `${latest.title.substring(0, 45)}` : `${latest.title.substring(0, 25)}...`}</h5>
                             </Link>
                             <button className="btn btn-dark mt-3 w-100 btn-special" type="button" onClick={(e) => handleAddToCart(latest)}>Add to Cart</button>
                         </div>
