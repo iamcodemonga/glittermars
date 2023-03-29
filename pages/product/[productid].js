@@ -313,9 +313,10 @@ export async function getServerSideProps(context) {
     const { cookie } = req.headers;
     const URL = process.env.API_ROOT;
     try {
-        const productData = await axios(`${URL}/products/${params.productid}`, { headers: { cookie: cookie || '' } });
+        const user = await axios(`${process.env.CLIENT_ROOT}/api/user`, { headers: { cookie: cookie || '' } });
+        const qstring = user ? `?user=${user.data._id}` : `?user=${user}`;
+        const productData = await axios(`${URL}/products/${params.productid}${qstring}`, { headers: { cookie: cookie || '' } });
         const similarData = await axios(`${URL}/products/recommended/${params.productid}`);
-        const user = await axios(`${URL}/user/`, { headers: { cookie: cookie || '' } } );
         const reviews = await axios(`${URL}/products/reviews/${params.productid}`);
         if (productData.data.error){
             return {

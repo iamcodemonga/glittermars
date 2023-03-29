@@ -84,8 +84,8 @@ export async function getServerSideProps(context) {
     const URL = process.env.API_ROOT;
 
     try {
-        const user = await axios(`${URL}/user`, { headers: { cookie: cookie || '' } } );
-        const orders = await axios(`${URL}/user/orders`, { headers: { cookie: cookie || '' } } );
+        const user = await axios(`${process.env.CLIENT_ROOT}/api/user`, { headers: { cookie: cookie || '' } });
+        const orders = await axios(`${URL}/user/orders/${user.data._id}`);
         if (!user.data){
             return {
                 redirect: {

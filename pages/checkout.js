@@ -525,7 +525,7 @@ export async function getServerSideProps(context) {
 
       try {
           let product = null;
-          const user = await axios(`${URL}/user/`, { headers: { cookie: cookie || '' } } );
+          const user = await axios(`${process.env.CLIENT_ROOT}/api/user`, { headers: { cookie: cookie || '' } });
           if(type == 'onetime'){
             const productData = await axios(`${URL}/products/${pid}`);
             if (productData.data.error) {

@@ -41,11 +41,14 @@ export async function getServerSideProps(context) {
     const { cookie } = req.headers;
     const URL = process.env.API_ROOT;
     try {
-        const user = await axios(`${URL}/user/`, { headers: { cookie: cookie || '' } } );
+        // const user = await axios(`${URL}/user/`, { headers: { cookie: cookie || '' } } );
+        const user = await axios(`${process.env.CLIENT_ROOT}/api/user`, { headers: { cookie: cookie || '' } });
+        // const user = await axios(`/api/user`);
         const newData = await axios(`${URL}/products/new`);
         const bestData = await axios(`${URL}/products/trending`);
         return {
           props: { latests: newData.data, bestProducts: bestData.data, user: user.data }
+          // props: { latests: newData.data, bestProducts: bestData.data }
         }
     } catch (error) {
         console.log(error)

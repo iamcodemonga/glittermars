@@ -73,8 +73,10 @@ const Navbar = ({ user }) => {
     const handleLogout = async(e) => {
         e.preventDefault();
         try {
-            const { data } = await axios(`${URL}/auth/logout`, { withCredentials: true })
-            if(data.status == 200){
+            // const { data } = await axios(`${URL}/auth/logout`, { withCredentials: true })
+            const { data } = await axios(`/api/auth/logout`, { withCredentials: true })
+
+            if(data.statusCode == 200){
                 router.push("/");
                 return;
             }

@@ -157,7 +157,7 @@ export async function getServerSideProps(context) {
 
     try {
         const { data } = await axios(`${URL}/products/category/jewelries${queryString}`);
-        const user = await axios(`${URL}/user/`, { headers: { cookie: cookie || '' } } );
+        const user = await axios(`${process.env.CLIENT_ROOT}/api/user`, { headers: { cookie: cookie || '' } });
         if (!data.error){
             return {
                 props: { allProducts: data.product, user: user.data }

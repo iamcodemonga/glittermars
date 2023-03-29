@@ -5,8 +5,6 @@ import { toast } from 'react-toastify'
 import BeatLoader from 'react-spinners/BeatLoader';
 
 const LoginForm = () => {
-
-    const URL = process.env.NEXT_PUBLIC_API_ROOT;
     const router = useRouter();
     const [ user, setUser ] = useState({ email: "", password: "" });
     const [ show, setShow ] = useState(false);
@@ -16,7 +14,7 @@ const LoginForm = () => {
         e.preventDefault();
         setLoading(true)
         try {
-            const { data } = await axios.post(`${URL}/auth/login`, user, { withCredentials: true });
+            const { data } = await axios.post('/api/auth/login', user, { withCredentials: true });
             if(data.error) {
                 toast.error(data.message, {
                     position: "bottom-right",
@@ -49,6 +47,7 @@ const LoginForm = () => {
             return;
         } catch (error) {
             console.log(error)
+            setLoading(false)
         }
     }
 

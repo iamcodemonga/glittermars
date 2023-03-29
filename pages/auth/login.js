@@ -7,11 +7,13 @@ import { useEffect } from 'react'
 import { useDispatch } from 'react-redux';
 import { initializeCart } from "@/features/cartSlice";
 import axios from "axios";
+import cookie from 'cookie';
 
 const login = ({ user }) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        console.log(`user = ${user}`)
         dispatch(initializeCart())
     })
 
@@ -26,13 +28,12 @@ const login = ({ user }) => {
     )
 }
 
-export async function getServerSideProps(context) {
-    const { req } = context;
+export async function getServerSideProps({ req }) {
     const { cookie } = req.headers;
-    const URL = process.env.API_ROOT;
 
     try {
-        const { data } = await axios(`${URL}/user`, { headers: { cookie: cookie || '' } })
+        const { data } = await axios(`${process.env.CLIENT_ROOT}/api/user`, { headers: { cookie: cookie || '' } });
+
         if(data){
             return {
                 redirect: {

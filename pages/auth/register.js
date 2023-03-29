@@ -29,10 +29,9 @@ const register = ({ user }) => {
 export async function getServerSideProps(context) {
     const { req } = context;
     const { cookie } = req.headers;
-    const URL = process.env.API_ROOT;
 
     try {
-        const { data } = await axios(`${URL}/user`, { headers: { cookie: cookie || '' } })
+        const { data } = await axios(`${process.env.CLIENT_ROOT}/api/user`, { headers: { cookie: cookie || '' } });
         if(data){
             return {
                 redirect: {

@@ -6,7 +6,6 @@ import BeatLoader from 'react-spinners/BeatLoader';
 
 const RegisterForm = () => {
 
-    const URL = process.env.NEXT_PUBLIC_API_ROOT;
     const router = useRouter();
     const [ user, setUser ] = useState({ fullname: "", email: "", password: "" });
     const [ show, setShow ] = useState(false);
@@ -16,7 +15,7 @@ const RegisterForm = () => {
         e.preventDefault();
         setLoading(true)
         try {
-            const { data } = await axios.post(`${URL}/auth/register`, user, { withCredentials: true });
+            const { data } = await axios.post(`/api//auth/register`, user, { withCredentials: true });
             if(data.error) {
                 toast.error(data.message, {
                     position: "bottom-right",
