@@ -314,8 +314,8 @@ export async function getServerSideProps(context) {
     const URL = process.env.API_ROOT;
     try {
         const user = await axios(`${process.env.CLIENT_ROOT}/api/user`, { headers: { cookie: cookie || '' } });
-        const qstring = user ? `?user=${user.data._id}` : `?user=${user}`;
-        const productData = await axios(`${URL}/products/${params.productid}${qstring}`, { headers: { cookie: cookie || '' } });
+        const qstring = (user.data==null ? `?user=null` : `?user=${user.data._id}`);
+        const productData = await axios(`${URL}/products/${params.productid}${qstring}`);
         const similarData = await axios(`${URL}/products/recommended/${params.productid}`);
         const reviews = await axios(`${URL}/products/reviews/${params.productid}`);
         if (productData.data.error){
