@@ -7,7 +7,7 @@ import Link from 'next/link';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { initializeCart, addProduct } from '@/features/cartSlice';
+import { initializeCart, addProduct, addToCart } from '@/features/cartSlice';
 import useSWR from 'swr';
 import { toast } from 'react-toastify'
 import BeatLoader from 'react-spinners/BeatLoader';
@@ -29,6 +29,11 @@ const Product = ({ product, recommended, user, customer, opinions }) => {
             return;
         }
         setCartQuantity((prev) => parseInt(prev)+1)
+    }
+
+    const handleAddToCart = (addedProduct) => {
+        dispatch(addToCart(addedProduct));
+        return;
     }
 
     const handleRemove = () => {
@@ -227,7 +232,7 @@ const Product = ({ product, recommended, user, customer, opinions }) => {
                                     <Link className="product-title" href={product.quantity > 0 ? `/product/${product._id}` : "#"}>
                                         <h5 className="my-0">{product.title.length < 40 ? `${product.title.substring(0, 42)}` : `${product.title.substring(0, 42)}...`}</h5>
                                     </Link>
-                                    <button className="btn btn-dark mt-3 w-100 btn-special" type="button">Add to Cart</button>
+                                    <button className="btn btn-dark mt-3 w-100 btn-special" type="button" onClick={(e) => handleAddToCart(product)}>Add to Cart</button>
                                 </div>
                             </div>
                         </div>)}

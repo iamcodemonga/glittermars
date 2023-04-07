@@ -6,6 +6,9 @@ import { Provider } from 'react-redux';
 import cartReducer from '../features/cartSlice'
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify'
+import { useState, useEffect } from 'react';
+import Router from 'next/router';
+import Loader from '@/components/Loader';
 
 const store = configureStore({
   reducer: {
@@ -14,6 +17,24 @@ const store = configureStore({
 })
 
 const App = ({ Component, pageProps }) =>  {
+
+  const [ loading, setLoading ] = useState(false);
+  useEffect(() => {
+
+    const startLoading = () => setLoading(true)
+    const endLoading = () => setLoading(false)
+
+    Router.events.on("routeChangeStart", startLoading)
+    Router.events.on("routeChangeComplete", endLoading)
+    Router.events.on("routeChangeError", endLoading)
+
+    return () => {
+      Router.events.off("routeChangeStart", startLoading)
+      Router.events.off("routeChangeComplete", endLoading)
+      Router.events.off("routeChangeError", endLoading)
+    }
+  }, [])
+
   return (
     <>
       <Head>
@@ -24,6 +45,7 @@ const App = ({ Component, pageProps }) =>  {
       </Head>
       <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></Script>
       <Provider store={store}>
+          {loading && <Loader loading={loading} />}
           <Component {...pageProps} />
           <ToastContainer
                 position="bottom-right"
@@ -43,7 +65,3 @@ const App = ({ Component, pageProps }) =>  {
 }
 
 export default App;
-// const makeStore = () => store;
-// const wrapper = createWrapper(makeStore)
-
-// export default wrapper.withRedux(App)
