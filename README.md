@@ -1,4 +1,4 @@
-This is a frontend repository of [glittermars](https://www.glittermars.vercel.app)! You can find the backend repository [by clicking here](https://www.github.com/iamcodemonga/glittermars-api)
+This is a frontend repository of [glittermars](https://glittermars.vercel.app)! You can find the backend repository [by clicking here](https://github.com/iamcodemonga/glittermars-api)
 
 # INTRODUCTION 
 
@@ -18,4 +18,4 @@ Glittermars is an e-commerce website project for fashion enthusiasts! You can bu
 
 ## CONCLUSION
 
-Glittermars is a never ending project! I constantly upgrade the project everytime a new feature comes to my mind. You can find the website at [https://glittermars.vercel.app](https://www.glittermars.vercel.app). this project is open to contributions and you can find the API repository at [https://github.com/iamcodemonga/glittermars-api](https://www.github.com/iamcodemonga/glittermars-api). Thank you!
+Glittermars is a never ending project! I constantly upgrade the project everytime a new feature comes to my mind. You can find the website at [https://glittermars.vercel.app](https://glittermars.vercel.app). this project is open to contributions and you can find the API repository at [https://github.com/iamcodemonga/glittermars-api](https://github.com/iamcodemonga/glittermars-api). Thank you!
