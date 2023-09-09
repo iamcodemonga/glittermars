@@ -155,10 +155,10 @@ export async function getServerSideProps(context) {
     }
 
     try {
-        const { data } = await axios(`${URL}/products${queryString}`);
-        const user = await axios(`${process.env.CLIENT_ROOT}/api/user`, { headers: { cookie: cookie || '' } });
+        // const { data } = await axios(`${URL}/products${queryString}`);
+        // const user = await axios(`${process.env.CLIENT_ROOT}/api/user`, { headers: { cookie: cookie || '' } });
         return {
-            props: { allProducts: data, user: user.data }
+            props: { allProducts: [], user: null }
         }
     } catch (error) {
         console.log(error)

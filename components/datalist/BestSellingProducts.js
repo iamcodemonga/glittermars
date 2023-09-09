@@ -21,7 +21,7 @@ const BestSellingProducts = ({ bestProducts }) => {
               <div className="card product-card-grid">
                 <div className="position-relative">
                   {product.quantity == 0 && <button className="btn btn-danger btn-sm disabled position-absolute" type="button" style={{right: 0}} disabled>sold out</button>}
-                  <Link href={product.quantity > 1 ? `/product/${product._id}` : ""} passHref>
+                  <Link href={product.quantity > 1 ? `/product/${product.slug}` : ""} passHref>
                     <Image className="img-fluid" src={product.images.split(',')[0]} style={{aspectRatio: '5/4', objectFit: 'cover'}} width={700} height={500} alt='best_selling_product' />
                   </Link>
                 </div>
@@ -32,7 +32,7 @@ const BestSellingProducts = ({ bestProducts }) => {
                         <span style={{textDecoration: 'line-through'}}>${product.price}</span>
                       </span>
                     </div>
-                    <Link className="product-title" href={product.quantity > 0 ? `/product/${product._id}` : "#"}>
+                    <Link className="product-title" href={product.quantity > 0 ? `/product/${product.slug}` : "#"}>
                       <h5 className="my-0">{product.title.length < 40 ? `${product.title.substring(0, 45)}` : `${product.title.substring(0, 45)}...`}</h5>
                     </Link>
                     <button className="btn btn-dark mt-3 w-100 btn-special" type="button" onClick={(e) => handleAddToCart(product)}>Add to Cart</button>

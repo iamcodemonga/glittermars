@@ -12,6 +12,7 @@ import useSWR from 'swr';
 import { toast } from 'react-toastify'
 import BeatLoader from 'react-spinners/BeatLoader';
 import Popup from '@/components/Popup';
+import { SimilarProducts, SingleProducts } from '@/services';
 // import ReactImageMagnify from 'react-image-magnify';
 
 const Product = ({ product, recommended, user, customer, opinions }) => {
@@ -204,7 +205,8 @@ const Product = ({ product, recommended, user, customer, opinions }) => {
                         <div className="col-12">
                             <div className="description">
                                 <h2 className='mt-0'>Product Description</h2>
-                                <p>{product.description}</p>
+                                <div dangerouslySetInnerHTML={{ __html: product.description.html}}></div>
+                                {/* <div>{ product.description.html}</div> */}
                             </div>
                         </div>
                     </div>
@@ -318,12 +320,14 @@ export async function getServerSideProps(context) {
     const { cookie } = req.headers;
     const URL = process.env.API_ROOT;
     try {
-        const user = await axios(`${process.env.CLIENT_ROOT}/api/user`, { headers: { cookie: cookie || '' } });
-        const qstring = (user.data==null ? `?user=null` : `?user=${user.data._id}`);
-        const productData = await axios(`${URL}/products/${params.productid}${qstring}`);
-        const similarData = await axios(`${URL}/products/recommended/${params.productid}`);
-        const reviews = await axios(`${URL}/products/reviews/${params.productid}`);
-        if (productData.data.error){
+        // const user = await axios(`${process.env.CLIENT_ROOT}/api/user`, { headers: { cookie: cookie || '' } });
+        // const qstring = (user.data==null ? `?user=null` : `?user=${user.data._id}`);
+        // const productData = await axios(`${URL}/products/${params.productid}${qstring}`);
+        // const reviews = await axios(`${URL}/products/reviews/${params.productid}`);
+        const productData = await SingleProducts(params.slug);
+        const similarData = await SimilarProducts(productData.id, productData.category);
+        console.log(productData)
+        if (!productData){
             return {
                 redirect: {
                     destination: '/',
@@ -333,11 +337,11 @@ export async function getServerSideProps(context) {
         }
         return {
             props: {
-                product: productData.data.product[0],
-                recommended: similarData.data,
-                user: user.data,
-                customer: productData.data.customer,
-                opinions: reviews.data
+                product: productData,
+                recommended: similarData,
+                user: null,
+                customer: null,
+                opinions: []
             }
         }
     } catch (error) {

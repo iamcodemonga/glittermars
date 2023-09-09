@@ -50,9 +50,9 @@ export async function getServerSideProps(context) {
     const { req } = context;
     const { cookie } = req.headers;
     try {
-        const user = await axios(`${process.env.CLIENT_ROOT}/api/user`, { headers: { cookie: cookie || '' } });
+        // const user = await axios(`${process.env.CLIENT_ROOT}/api/user`, { headers: { cookie: cookie || '' } });
         return {
-            props: { user: user.data }
+            props: { user: null }
         }
     } catch (error) {
         console.log(error)

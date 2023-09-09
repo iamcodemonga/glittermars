@@ -50,7 +50,7 @@ const NewProducts = ({ latests }) => {
                     {latests && latests.slice(0,6).map((latest, index) => <div className="card product-card me-2" key={index}>
                         <div className="position-relative">
                             {latest.quantity > 0 ? <button className="btn btn-info btn-sm disabled position-absolute" type="button" style={{right: 0}} disabled>in stock</button> : <button className="btn btn-secondary btn-sm disabled position-absolute" type="button" style={{right: 0}} disabled>sold out</button>}
-                            <Link href={`/product/${latest._id}`} passHref>
+                            <Link href={`/product/${latest.slug}`} passHref>
                                 <Image className="img-fluid" src={latest.images.split(',')[0]} style={{aspectRatio: '5/4', objectFit: 'cover'}} width={500} height={400} alt='latest_products' />
                             </Link>
                         </div>
@@ -61,7 +61,7 @@ const NewProducts = ({ latests }) => {
                                     <span style={{textDecoration: 'line-through'}}>${latest.price}</span>
                                 </span>
                             </div>
-                            <Link className="product-title" href={`/product/${latest._id}`}>
+                            <Link className="product-title" href={`/product/${latest.slug}`}>
                                 <h5 className="my-0">{latest.title.length < 30 ? `${latest.title.substring(0, 45)}` : `${latest.title.substring(0, 25)}...`}</h5>
                             </Link>
                             <button className="btn btn-dark mt-3 w-100 btn-special" type="button" onClick={(e) => handleAddToCart(latest)}>Add to Cart</button>

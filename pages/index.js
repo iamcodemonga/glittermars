@@ -12,6 +12,7 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { initializeCart } from '@/features/cartSlice'
+import { FeaturedProducts, SellingProducts } from '@/services';
 
 export default function Home({ latests, bestProducts, user }) {
 
@@ -42,12 +43,14 @@ export async function getServerSideProps(context) {
     const URL = process.env.API_ROOT;
     try {
         // const user = await axios(`${URL}/user/`, { headers: { cookie: cookie || '' } } );
-        const user = await axios(`${process.env.CLIENT_ROOT}/api/user`, { headers: { cookie: cookie || '' } });
+        // const user = await axios(`${process.env.CLIENT_ROOT}/api/user`, { headers: { cookie: cookie || '' } });
         // const user = await axios(`/api/user`);
-        const newData = await axios(`${URL}/products/new`);
-        const bestData = await axios(`${URL}/products/trending`);
+        // const newData = await axios(`${URL}/products/new`);
+        const newData = await FeaturedProducts();
+        const bestData = await SellingProducts();
+        // const bestData = await axios(`${URL}/products/trending`);
         return {
-          props: { latests: newData.data, bestProducts: bestData.data, user: user.data }
+          props: { latests: newData, bestProducts: bestData, user: null }
           // props: { latests: newData.data, bestProducts: bestData.data }
         }
     } catch (error) {
