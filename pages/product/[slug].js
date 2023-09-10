@@ -326,7 +326,7 @@ export async function getServerSideProps(context) {
         // const reviews = await axios(`${URL}/products/reviews/${params.productid}`);
         const productData = await SingleProducts(params.slug);
         const similarData = await SimilarProducts(productData.id, productData.category);
-        console.log(productData)
+        // console.log(productData)
         if (!productData){
             return {
                 redirect: {

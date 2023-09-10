@@ -10,6 +10,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux';
 import { initializeCart, addToCart } from '@/features/cartSlice';
+import { FilteredProducts } from '@/services';
 
 const Shop = ({ allProducts, user }) => {
 
@@ -52,7 +53,8 @@ const Shop = ({ allProducts, user }) => {
             return;
         }
 
-        const { data } = await axios(`${URL}/products?min=${price.min}&max=${price.max}`);
+        // const { data } = await axios(`${URL}/products?min=${price.min}&max=${price.max}`);
+        const data = await FilteredProducts(price.min, price.max)
         router.push(`?min=${price.min}&max=${price.max}`, undefined, { shallow: true})
         setProduct(data)
         return data;
@@ -110,7 +112,7 @@ const Shop = ({ allProducts, user }) => {
                                     <div className="card product-card-grid">
                                     <div className="position-relative">
                                         {product.quantity < 1 && <button className="btn btn-danger btn-sm disabled position-absolute" type="button" style={{right: 0}} disabled>sold out</button>}
-                                        <Link href={product.quantity > 0 ? `/product/${product._id}` : "#"}>
+                                        <Link href={product.quantity > 0 ? `/product/${product.slug}` : "#"}>
                                         <Image className="img-fluid" src={product.images.split(',')[0]} style={{aspectRatio: '5/4', objectFit: 'cover'}} width={700} height={400} alt="shop_image" />
                                         </Link>
                                     </div>
@@ -121,7 +123,7 @@ const Shop = ({ allProducts, user }) => {
                                             <span style={{textDecoration: 'line-through'}}>${product.price}</span>
                                             </span>
                                         </div>
-                                        <Link className="product-title" href={product.quantity > 0 ? `/product/${product._id}` : "#"}>
+                                        <Link className="product-title" href={product.quantity > 0 ? `/product/${product.slug}` : "#"}>
                                             <h5 className="my-0">{product.title.length < 40 ? `${product.title.substring(0, 45)}` : `${product.title.substring(0, 45)}...`}</h5>
                                         </Link>
                                         <button className="btn btn-dark mt-3 w-100 btn-special" type="button" onClick={(e) => handleAddToCart(product)}>Add to Cart</button>
@@ -144,21 +146,33 @@ export async function getServerSideProps(context) {
     const URL = process.env.API_ROOT;
     const { req, query } = context;
     const { cookie } = req.headers;
-    const { min, max } = query;
-    let queryString = '';
+    let { min, max } = query;
     const queryRegex = /^([a-zA-Z ]+)$/;
 
-    if (min != undefined && max != undefined){
-        if (!queryRegex.test(min) && !queryRegex.test(max)) {
-            queryString = `?min=${min}&max=${max}`;
-        }
+    if (min == undefined || max == undefined){
+        min = 0;
+        max = 10000;
+        console.log('undefined check')
+    }
+
+    if (min == '' || max == ''){
+        min = 0;
+        max = 10000;
+        console.log('empty check')
+    }
+
+    if (queryRegex.test(min) || queryRegex.test(max)) {
+        min = 0;
+        max = 10000;
+        console.log('test')
     }
 
     try {
         // const { data } = await axios(`${URL}/products${queryString}`);
         // const user = await axios(`${process.env.CLIENT_ROOT}/api/user`, { headers: { cookie: cookie || '' } });
+        const data = await FilteredProducts(min, max);
         return {
-            props: { allProducts: [], user: null }
+            props: { allProducts: data, user: null }
         }
     } catch (error) {
         console.log(error)

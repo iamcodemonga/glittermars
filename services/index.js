@@ -76,3 +76,35 @@ export const SimilarProducts = async(id, category) => {
     const result = await hygraph.request(QUERY)
     return result.products;
 }
+
+export const FilteredProducts = async(min, max) => {
+    const QUERY = gql`
+        {
+            products(where: {price_gte: ${min}, price_lte: ${max}}) {
+                images
+                price
+                id
+                quantity
+                slug
+                title
+              }
+        }`;
+    const result = await hygraph.request(QUERY)
+    return result.products;
+}
+
+export const CategoryProducts = async(category, min, max) => {
+    const QUERY = gql`
+        {
+            products(where: {category: "${category}", price_gte: ${min}, price_lte: ${max}}) {
+                images
+                price
+                id
+                quantity
+                slug
+                title
+            }
+        }`;
+    const result = await hygraph.request(QUERY)
+    return result.products;
+}
