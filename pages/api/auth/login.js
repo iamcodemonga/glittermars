@@ -1,11 +1,16 @@
-import axios from "axios";
+import { GraphQLClient, gql } from "graphql-request";
 import jwt from "jsonwebtoken";
 import { serialize } from "cookie";
 
-const URL = process.env.API_ROOT;
+const key = process.env.API_KEY;
+const bearer = process.env.GRAPH_BEARER;
+
+export const hygraph = new GraphQLClient(key, {headers: { Authorization: bearer }});
 
 export default async function (req, res) {
     if(req.method == "POST") {
+        // res.json({ message: 'nice'});
+        // return;
         let status
         let { email, password } = req.body;
         let emailRegex = /^([a-zA-Z0-9\.\-_]+)@([a-zA-Z0-9\-]+)\.([a-z]{2,10})(\.[a-z]{2,10})?$/;
@@ -21,26 +26,46 @@ export default async function (req, res) {
             return res.json(status)
         }
 
+        const FindUser = async(email, password) => {
+            const QUERY = gql`
+                {
+                    customers(where: {email: "${email}", password: "${password}"}) {
+                        id
+                        fullname
+                        email
+                    }
+                }`;
+            const result = await hygraph.request(QUERY)
+            return result.customers;
+        }
+
+        const existingUser = await FindUser(email, password);
+
         //check database for user
         try {
-            const { data } = await axios.post(`${URL}/auth/login`, req.body);
-            if (data.error){
-                return res.json(data)
+            // Bcrypt will compare password
+            console.log(existingUser)
+            if (existingUser.length < 1){
+                status = { error: true, message: "this user does not exist!"}
+                res.json(status)
+                return;
             } else {
                 //create token with jwt
-                const token = jwt.sign({ id: data.user[0]._id }, process.env.JWTSECRET, { expiresIn: process.env.JWTEXP});
+                const token = jwt.sign({ id: existingUser.id }, process.env.JWTSECRET, { expiresIn: process.env.JWTEXP});
                 // serialize cookie
                 console.log(token)
-                const serializedCookie = serialize("glittermars", token, {
-                    maxAge: 60*60*24*7,
-                    httpOnly: true,
-                    sameSite: "strict",
-                    secure: process.env.NODE_ENV !== "development",
-                    path: "/"
-                });
-                //setCookie
-                res.setHeader("set-Cookie", serializedCookie)
-                return res.json(data)
+                // const serializedCookie = serialize("glittermars", token, {
+                //     maxAge: 60*60*24*7,
+                //     httpOnly: true,
+                //     sameSite: "strict",
+                //     secure: process.env.NODE_ENV !== "development",
+                //     path: "/"
+                // });
+                // //setCookie
+                // res.setHeader("set-Cookie", serializedCookie)
+                status = { error: false, message: "you are welcome!"}
+                res.json(status)
+                return;
             }
         } catch (error) {
             console.log(error)

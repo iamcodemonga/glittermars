@@ -10,40 +10,47 @@ const LoginForm = () => {
     const [ show, setShow ] = useState(false);
     const [ loading, setLoading ] = useState(false);
 
+    const server = process.env.NEXT_PUBLIC_SERVER;
+
     const handleLogin = async(e) => {
         e.preventDefault();
         setLoading(true)
         try {
-            const { data } = await axios.post('/api/auth/login', user, { withCredentials: true });
-            if(data.error) {
-                toast.error(data.message, {
-                    position: "bottom-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "colored",
-                });
-                setLoading(false)
-                return;
-            }
-    
-            toast.success(data.message, {
-                position: "bottom-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-            });
+            const data = await axios.post(`${server}/api/auth/login`, user, { withCredentials: true });
+            // const { data } = await axios.post('/api/auth/login', user, { withCredentials: true });
+
+            console.log(data)
             setLoading(false)
-            setTimeout(() => {
-                router.push("/account")
-            }, 1500);
+
+            // if(data.error) {
+            //     toast.error(data.message, {
+            //         position: "bottom-right",
+            //         autoClose: 5000,
+            //         hideProgressBar: false,
+            //         closeOnClick: true,
+            //         pauseOnHover: true,
+            //         draggable: true,
+            //         progress: undefined,
+            //         theme: "colored",
+            //     });
+            //     setLoading(false)
+            //     return;
+            // }
+    
+            // toast.success(data.message, {
+            //     position: "bottom-right",
+            //     autoClose: 5000,
+            //     hideProgressBar: false,
+            //     closeOnClick: true,
+            //     pauseOnHover: true,
+            //     draggable: true,
+            //     progress: undefined,
+            //     theme: "colored",
+            // });
+            // setLoading(false)
+            // setTimeout(() => {
+            //     router.push("/account")
+            // }, 1500);
             return;
         } catch (error) {
             console.log(error)
@@ -67,7 +74,7 @@ const LoginForm = () => {
                     <input className="form-control" type={show ? "text" : "password"} placeholder="xxxxxxx" onChange={(e) => setUser((prev) => { return {...prev, password: e.target.value}})} />
                 </div>
                 {loading ? <button className="btn btn-dark w-100" type="button" style={{backgroundColor: '#3c0000'}} disabled><BeatLoader size={7} color={"#f3dcd1"} loading={loading} aria-label="Loading Spinner" data-testid="loader" /></button> : <button className="btn btn-dark w-100" type="submit" style={{backgroundColor: '#3c0000'}}>submit</button>}
-                <p className="mt-3 text_small">Click <a href="https://codemonga.bss.design" target="_blank">password</a> if you have forgotten your password!</p>
+                <p className="mt-3 text_small">Click <a href="https://codemonga.com" target="_blank">password</a> if you have forgotten your password!</p>
             </form>
         </section>
     )

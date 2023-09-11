@@ -10,6 +10,7 @@ import Image from "next/image"
 import router from 'next/router'
 import { toast } from "react-toastify";
 import BeatLoader from 'react-spinners/BeatLoader';
+import { SingleProducts } from '@/services';
 
 const Checkout = ({ user, query, product }) => {
 
@@ -489,7 +490,7 @@ export async function getServerSideProps(context) {
     const URL = process.env.API_ROOT;
       const { req, query } = context;
       const { cookie } = req.headers;
-      const { type, pid, qty } = query
+      const { type, slug, qty } = query
       const qtyRegex = /^([0-9]+)$/;
       console.log(query)
 
@@ -503,7 +504,7 @@ export async function getServerSideProps(context) {
         }
       }
 
-      if (type == 'onetime' && (pid == undefined || pid == "")) {
+      if (type == 'onetime' && (slug == undefined || slug == "")) {
         console.log('second condition')
         return {
             redirect: {
@@ -525,24 +526,25 @@ export async function getServerSideProps(context) {
 
       try {
           let product = null;
-          const user = await axios(`${process.env.CLIENT_ROOT}/api/user`, { headers: { cookie: cookie || '' } });
+        //   const user = await axios(`${process.env.CLIENT_ROOT}/api/user`, { headers: { cookie: cookie || '' } });
           if(type == 'onetime'){
-            const productData = await axios(`${URL}/products/${pid}`);
-            if (productData.data.error) {
+            const productData = await SingleProducts(slug);
+            console.log(productData)
+            if (!productData) {
                 return {
                     redirect: { destination: '/', permanent: false }
                 }
             }
-            if (parseInt(qty) > parseInt(productData.data.product[0].quantity)) {
+            if (parseInt(qty) > parseInt(productData.quantity)) {
                 return {
                     redirect: { destination: '/', permanent: false }
                 }
             }
-            product = productData.data.product[0];
+            product = productData;
           }
-          console.log(user.data)
+        //   console.log(user)
           return {
-            props: { user: user.data, query: (type == "bulk" ? { type} : { type, pid, qty}), product }
+            props: { user: null, query: (type == "bulk" ? { type} : { type, slug, qty}), product }
           }
       } catch (error) {
           console.log(error)

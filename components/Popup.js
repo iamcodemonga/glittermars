@@ -31,7 +31,7 @@ const Popup = ({ status, handleHide, user, product, cartQuantity, bulk }) => {
                 <Modal.Title id="contained-modal-title-vcenter"> </Modal.Title>
             </Modal.Header>
             <Modal.Body style={{backgroundColor: "#f3dcd1"}}>
-                <h5 className='mt-0 mb-2 text-center'><Link href={bulk ? "/checkout?type=bulk": `/checkout?type=onetime&pid=${product._id}&qty=${cartQuantity}`} className='paylink fw-bold'>Pay on delivery</Link></h5>
+                <h5 className='mt-0 mb-2 text-center'><Link href={bulk ? "/checkout?type=bulk": `/checkout?type=onetime&slug=${product.slug}&qty=${cartQuantity}`} className='paylink fw-bold'>Pay on delivery</Link></h5>
                 <h5 className='mt-4 mb-2 text-center'><Link href="/" className='paylink fw-bold' onClick={handleStripe}>Pay with stripe</Link></h5>
             </Modal.Body>
             <Modal.Footer className='border-0' style={{backgroundColor: "#f3dcd1"}}>

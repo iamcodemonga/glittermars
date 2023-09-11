@@ -220,7 +220,7 @@ const Product = ({ product, recommended, user, customer, opinions }) => {
                             <div className="card product-card-grid">
                                 <div className="position-relative">
                                     {product.quantity < 1 && <button className="btn btn-danger btn-sm disabled position-absolute" type="button" style={{right: 0}} disabled>sold out</button>}
-                                    <Link href={product.quantity > 0 ? `/product/${product._id}` : "#"}>
+                                    <Link href={product.quantity > 0 ? `/product/${product.slug}` : "#"}>
                                     <Image className="img-fluid" src={product.images.split(',')[0]} style={{aspectRatio: '5/4', objectFit: 'cover'}} width={700} height={500} alt="recommended_image" />
                                     </Link>
                                 </div>
@@ -231,7 +231,7 @@ const Product = ({ product, recommended, user, customer, opinions }) => {
                                         <span style={{textDecoration: 'line-through'}}>${product.price}</span>
                                         </span>
                                     </div>
-                                    <Link className="product-title" href={product.quantity > 0 ? `/product/${product._id}` : "#"}>
+                                    <Link className="product-title" href={product.quantity > 0 ? `/product/${product.slug}` : "#"}>
                                         <h5 className="my-0">{product.title.length < 40 ? `${product.title.substring(0, 42)}` : `${product.title.substring(0, 42)}...`}</h5>
                                     </Link>
                                     <button className="btn btn-dark mt-3 w-100 btn-special" type="button" onClick={(e) => handleAddToCart(product)}>Add to Cart</button>

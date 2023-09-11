@@ -38,7 +38,7 @@ const CartBar = ({ user, product, cartQuantity }) => {
                         </header>
                         <section className="pb-5 overflow-auto" style={{height: '70%'}}>
                             <div>
-                                {cart.items.length > 0 ? cart.items.map((item, index) => <div className="d-flex mx-4 mt-5"key={item._id}>
+                                {cart.items.length > 0 ? cart.items.map((item, index) => <div className="d-flex mx-4 mt-5"key={item.id}>
                                     <div className="h-100 pe-3">
                                         <Image src={item.images.split(',')[0]} style={{objectFit: 'cover'}} width={70} height={70} alt="cart_image" />
                                     </div>
@@ -48,7 +48,7 @@ const CartBar = ({ user, product, cartQuantity }) => {
                                             <span className="text_small real ms-2">${(item.price*item.cartQuantity*0.8).toFixed(2)}</span>
                                         </h6>
                                         <p className="my-2">
-                                            <Link className="cart-title" href={`/product/${item._id}`}>${item.title}</Link>
+                                            <Link className="cart-title" href={`/product/${item.slug}`}>${item.title}</Link>
                                         </p>
                                         <div className="d-flex">
                                             <button className="btn btn-danger btn-sm" type="button" onClick={() => dispatch(deleteProduct(item))}>Remove</button>

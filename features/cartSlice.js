@@ -21,7 +21,7 @@ const cartSlice = createSlice({
             return;
         },
         addProduct(state, action) {
-            const itemIndex = state.items.findIndex(item => item._id === action.payload._id)
+            const itemIndex = state.items.findIndex(item => item.id === action.payload.id)
             if (itemIndex >= 0) {
                 let newCount = Math.floor(state.items[itemIndex].cartQuantity)+Math.floor(action.payload.cartQuantity)
                 if (state.items[itemIndex].cartQuantity == action.payload.quantity) {
@@ -83,7 +83,7 @@ const cartSlice = createSlice({
             localStorage.setItem("quantity", JSON.stringify(state.quantity))
         },
         addToCart(state, action) {
-            const itemIndex = state.items.findIndex(item => item._id === action.payload._id)
+            const itemIndex = state.items.findIndex(item => item.id === action.payload.id)
             
             if (itemIndex >= 0) {
                 if (state.items[itemIndex].cartQuantity == action.payload.quantity) {
@@ -121,10 +121,10 @@ const cartSlice = createSlice({
             localStorage.setItem("quantity", JSON.stringify(state.quantity))
         },
         removeFromCart(state, action) {
-            const itemIndex = state.items.findIndex(item => item._id === action.payload._id)
+            const itemIndex = state.items.findIndex(item => item.id === action.payload.id)
             let cartItems;
             if (state.items[itemIndex].cartQuantity == 1) {
-                cartItems = state.items.filter((item, index) => item._id !== action.payload._id)
+                cartItems = state.items.filter((item, index) => item.id !== action.payload.id)
                 toast.info(`Item Removed From Cart`, {
                     position: "bottom-right",
                     autoClose: 5000,
@@ -147,8 +147,8 @@ const cartSlice = createSlice({
             localStorage.setItem("quantity", JSON.stringify(state.quantity))
         },
         deleteProduct(state, action){
-                const itemIndex = state.items.findIndex(item => item._id === action.payload._id)
-                let cartItems = state.items.filter((item, index) => item._id !== action.payload._id)
+                const itemIndex = state.items.findIndex(item => item.id === action.payload.id)
+                let cartItems = state.items.filter((item, index) => item.id !== action.payload.id)
                 state.quantity -= state.items[itemIndex].cartQuantity;
                 let totalAmt = parseInt(state.items[itemIndex].price)*parseInt(state.items[itemIndex].cartQuantity)
                 state.amount -= totalAmt;

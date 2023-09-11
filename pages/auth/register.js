@@ -31,7 +31,9 @@ export async function getServerSideProps(context) {
     const { cookie } = req.headers;
 
     try {
-        const { data } = await axios(`${process.env.CLIENT_ROOT}/api/user`, { headers: { cookie: cookie || '' } });
+        // const { data } = await axios(`${process.env.CLIENT_ROOT}/api/user`, { headers: { cookie: cookie || '' } });
+        const data = null;
+
         if(data){
             return {
                 redirect: {
